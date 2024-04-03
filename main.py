@@ -1,14 +1,23 @@
-# print("hello world")
-# print("Hello. I am M Zeeshan Khan. \n -group member of the Sem Project.")
-
 from tkinter import *
+from PIL import Image, ImageTk
 
+# Create the Tkinter window
 dbms_root = Tk()
+dbms_root.geometry("600x345")
+dbms_root.configure(background='black')  # Set background color to black
 
-dbms_root.geometry("600x485")
-dbms_root.minsize(300,100)
-donation=Label(text="BLOOD DONATION PROJECT")
-donation.pack()
+# Open and resize the image
+image = Image.open(r"C:\Users\92313\Downloads\istockphoto-1224861391-612x612.jpg")
+image = image.resize((dbms_root.winfo_screenwidth(), dbms_root.winfo_screenheight()))
+background_image = ImageTk.PhotoImage(image)
 
+# Create a Label with the background image
+background_label = Label(dbms_root, image=background_image)
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+# Add other widgets on top of the background image
+donation_label = Label(dbms_root, text="BLOOD DONATION PROJECT", font=("Helvetica", 24), bg="navyblue", fg="white")
+donation_label.pack(pady=20)
+
+# Run the Tkinter event loop
 dbms_root.mainloop()
-

@@ -1,9 +1,12 @@
 from tkinter import *
 from PIL import Image, ImageTk
 
+
 # Create the Tkinter window
 dbms_root = Tk()
 dbms_root.geometry("600x345")
+dbms_root.minsize(300,300)
+
 dbms_root.configure(background='black')  # Set background color to black
 
 # Open and resize the image
@@ -21,3 +24,4 @@ donation_label.pack(pady=20)
 
 # Run the Tkinter event loop
 dbms_root.mainloop()
+

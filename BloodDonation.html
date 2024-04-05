@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blood Donation Project</title>
+    <!-- Import Materialize CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <style>
+      /* Internal CSS */
+      .brand-logo {
+        margin-left: 20px;
+      }
+      .home-options {
+        margin-top: 50px;
+        text-align: center;
+      }
+      .home-option-btn {
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-wrapper">
+        <!-- Logo -->
+        <a href="#" class="brand-logo">Blood Donation Project</a>
+        <!-- Mobile Menu Trigger -->
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"
+          ><i class="material-icons">menu</i></a
+        >
+        <!-- Desktop Menu -->
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Admin Login</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <ul class="sidenav" id="mobile-demo">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">Admin Login</a></li>
+    </ul>
+
+    <!-- Home Options -->
+    <div class="container home-options">
+      <!-- Donate Blood Dropdown -->
+      <div class="dropdown">
+        <a
+          class="btn-large home-option-btn dropdown-trigger"
+          href="#"
+          data-target="donate-dropdown"
+          >Donate Blood</a
+        >
+        <ul id="donate-dropdown" class="dropdown-content">
+          <li><a href="#">Existing Donor</a></li>
+          <li><a href="#">New Donor</a></li>
+        </ul>
+      </div>
+      <!-- Receive Blood Dropdown -->
+      <div class="dropdown">
+        <a
+          class="btn-large home-option-btn dropdown-trigger"
+          href="#"
+          data-target="receive-dropdown"
+          >Receive Blood</a
+        >
+        <ul id="receive-dropdown" class="dropdown-content">
+          <li><a href="#">New Request</a></li>
+          <li><a href="#">Check Approval</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Import Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      // Initialize Materialize components
+      document.addEventListener("DOMContentLoaded", function () {
+        var elems = document.querySelectorAll(".sidenav");
+        var instances = M.Sidenav.init(elems);
+
+        // Initialize dropdowns
+        var dropdowns = document.querySelectorAll(".dropdown-trigger");
+        var instances = M.Dropdown.init(dropdowns, {
+          alignment: "right", // Adjust dropdown alignment if needed
+          coverTrigger: false, // Set to true if you want the dropdown to cover the trigger button
+        });
+      });
+    </script>
+  </body>
+</html>

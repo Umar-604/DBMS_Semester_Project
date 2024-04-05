@@ -10,7 +10,7 @@ dbms_root.minsize(300,300)
 dbms_root.configure(background='black')  # Set background color to black
 
 # Open and resize the image
-image = Image.open(r"C:\Users\92313\Downloads\istockphoto-1224861391-612x612.jpg")
+image = Image.open(r"image/istockphoto-1224861391-612x612.jpg")
 image = image.resize((dbms_root.winfo_screenwidth(), dbms_root.winfo_screenheight()))
 background_image = ImageTk.PhotoImage(image)
 

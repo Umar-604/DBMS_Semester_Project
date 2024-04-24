@@ -28,7 +28,7 @@ def insert_donor():
 # Function to recieve donor data into the database
 def insert_receiver():
     recipent_id=input("Enter recipent ID:")
-    name =input("Enter name:")
+    name=input("Enter name:")
     contact=input("Enter contact number:")
     blood_type=input("Enter blood type:")
     date_of_birth=input("Enter date of birth(YYYY-MM-DD):")
@@ -52,19 +52,45 @@ def insert_receiver():
             cursor.close()
             db.close()
 
-def view_donor_data(table_name):
+def insert_blood_bank():
+    blood_bank_id = input("Enter blood bank ID : ")
+    name = input("Enter name of blood bank : ")
+    location = input("Enter location of blood bank : ")
+    contact = input("Enter contact info of blood bank :")
+    services_provided = input("Enter the services provided by blood bank : ")
+    operating_hours = input("Enter operating hours : ")
+
+    db = get_db_connection()
+    if db:
+        try:
+            cursor = db.cursor()
+            insert_query = """INSERT INTO blood_banks(blood_bank_id, name, location, contact, services_provided, operating_hours)
+                              VALUES(%s, %s, %s, %s, %s, %s)"""
+            cursor.execute(insert_query, (blood_bank_id, name, location, contact, services_provided, operating_hours))
+            db.commit()
+            print("Receiver's data inserted successfully!")
+        except psycopg2.Error as e:
+            print("Error inserting donor data:", e)
+            db.rollback()
+        finally:
+            # Close the cursor and database connection
+            cursor.close()
+            db.close()
+
+
+def view_table_data(table_name):
     db = get_db_connection()
     cursor = db.cursor()
     cursor.execute("SELECT * FROM {}".format(table_name))
     rows = cursor.fetchall()
     db.close()
     return rows
-table_name = input("Enter table name : ")
-data = view_donor_data(table_name)
-for row in data:
-    print(row)            
+# table_name = input("Enter table name : ")
+# data = view_table_data(table_name)
+# for row in data:
+#     print(row)            
 # Call the insert_donor function
-insert_donor()
-insert_receiver()
-
+# insert_donor()
+# insert_receiver()
+insert_blood_bank()
 

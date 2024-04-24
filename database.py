@@ -77,6 +77,57 @@ def insert_blood_bank():
             cursor.close()
             db.close()
 
+def insert_donations():
+    donation_id = input("Enter donation ID : ")
+    donor_id = input("Enter donor's ID : ")
+    blood_bank_id = input("Enter blood bank ID : ")
+    donation_date = input("Enter date of donation(YYYY-MM-DD) :")
+    quantity_donated = input("Enter quantity of blood(ml) : ")
+    blood_type = input("Enter blood type : ")
+    health_check_information = input("Enter health check  information : ")
+
+    db = get_db_connection()
+    if db:
+        try:
+            cursor = db.cursor()
+           
+            trigger_query = """
+                CREATE OR REPLACE FUNCTION before_insert_donations_trigger()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                    -- Update the donor's last donation date
+                    UPDATE donors
+                    SET last_donation_date = CURRENT_DATE
+                    WHERE donor_id = NEW.donor_id;
+
+                    -- Validate the quantity of blood donated
+                    IF NEW.quantity_donated > 500 THEN
+                        RAISE EXCEPTION 'Quantity of blood donated exceeds safe limits';
+                    END IF;
+
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+                
+                CREATE OR REPLACE TRIGGER donations_before_insert_trigger
+                BEFORE INSERT ON donations
+                FOR EACH ROW
+                EXECUTE FUNCTION before_insert_donations_trigger();
+            """
+            cursor.execute(trigger_query)
+            db.commit()
+            insert_query = """INSERT INTO donations(donation_id, donor_id, blood_bank_id, donation_date, quantity_donated, blood_type, health_check_information)
+                              VALUES(%s, %s, %s, %s, %s, %s, %s)"""
+            cursor.execute(insert_query, (donation_id, donor_id, blood_bank_id, donation_date, quantity_donated, blood_type, health_check_information))
+            db.commit()
+            
+        except psycopg2.Error as e:
+            print("Error creating trigger:", e)
+            db.rollback()
+        finally:
+            # Close the cursor and database connection
+            cursor.close()
+            db.close()
 
 def view_table_data(table_name):
     db = get_db_connection()
@@ -92,5 +143,5 @@ def view_table_data(table_name):
 # Call the insert_donor function
 # insert_donor()
 # insert_receiver()
-insert_blood_bank()
+# insert_blood_bank()
 

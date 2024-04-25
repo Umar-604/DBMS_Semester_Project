@@ -62,7 +62,51 @@ def view_donor_data(table_name):
 table_name = input("Enter table name : ")
 data = view_donor_data(table_name)
 for row in data:
-    print(row)            
+    print(row) 
+def after_update_blood_inventory():
+    db = get_db_connection()
+    if db:
+        try:
+            cursor = db.cursor()
+           
+            trigger_query = """
+                CREATE OR REPLACE FUNCTION after_update_blood_inventory()
+                RETURNS TRIGGER AS $$
+                DECLARE
+                    blood_type_threshold INT := 100;  
+                    blood_expiry_period INTERVAL := '90 days'; 
+                BEGIN
+                    -- Send alerts if the quantity of any blood type falls below the threshold
+                    IF NEW.quantity < blood_type_threshold THEN
+                    
+                        RAISE NOTICE 'Alert: Quantity of blood type % is below threshold', NEW.blood_type;
+                    END IF;
+
+                    -- Update the expiry date of blood units based on their lifespan
+                    UPDATE blood_inventory
+                    SET expiry_date = NEW.date_collected + blood_expiry_period
+                    WHERE blood_id = NEW.blood_id;
+
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+                
+                CREATE TRIGGER blood_inventory_after_update_trigger
+                AFTER UPDATE ON blood_inventory
+                FOR EACH ROW
+                EXECUTE FUNCTION after_update_blood_inventory();
+            """
+            cursor.execute(trigger_query)
+            db.commit()
+            
+        except psycopg2.Error as e:
+            print("Error creating trigger:", e)
+            db.rollback()
+        finally:
+            # Close the cursor and database connection
+            cursor.close()
+            db.close()
+           
 # Call the insert_donor function
 insert_donor()
 insert_receiver()

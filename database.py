@@ -122,6 +122,7 @@ def after_update_blood_inventory():
             cursor.close()
             db.close()
 
+#
 def insert_donations():
     donation_id = input("Enter donation ID : ")
     donor_id = input("Enter donor's ID : ")
@@ -174,6 +175,47 @@ def insert_donations():
             cursor.close()
             db.close()
 
+def before_insert_blood_inventory():
+    try:
+        db = get_db_connection()
+        if db:
+            cursor = db.cursor()
+            trigger_query = sql.SQL("""
+                CREATE OR REPLACE FUNCTION before_insert_blood_inventory()
+                RETURNS TRIGGER AS $$
+                DECLARE
+                    blood_bank_exists BOOLEAN;
+                BEGIN
+                    -- Check if the blood bank ID exists in the blood bank table
+                    SELECT EXISTS(SELECT 1 FROM blood_bank WHERE blood_bank_id = NEW.blood_bank_id) INTO blood_bank_exists;
+                    IF NOT blood_bank_exists THEN
+                        RAISE EXCEPTION 'Blood bank with ID % does not exist', NEW.blood_bank_id;
+                    END IF;
+                    
+                    -- Ensure that the expiry date is not in the past
+                    IF NEW.expiry_date < CURRENT_DATE THEN
+                        RAISE EXCEPTION 'Past Expiry date';
+                    END IF;
+
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+                
+                CREATE TRIGGER blood_inventory_before_insert_trigger
+                BEFORE INSERT ON blood_inventory
+                FOR EACH ROW
+                EXECUTE FUNCTION before_insert_blood_inventory();
+            """)
+            cursor.execute(trigger_query)
+            db.commit()
+            cursor.close()
+    except psycopg2.Error as e:
+        print("Error creating trigger:", e)
+        if db:
+            db.rollback()
+    finally:
+        if db:
+            db.close()
 
 
 def view_table_data(table_name):

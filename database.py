@@ -192,10 +192,12 @@ def before_insert_blood_inventory():
                         RAISE EXCEPTION 'Blood bank with ID % does not exist', NEW.blood_bank_id;
                     END IF;
                     
-                    -- Ensure that the expiry date is not in the past
+                   -- Ensure that the expiry date is not in the past
                     IF NEW.expiry_date < CURRENT_DATE THEN
                         RAISE EXCEPTION 'Past Expiry date';
                     END IF;
+
+
 
                     RETURN NEW;
                 END;

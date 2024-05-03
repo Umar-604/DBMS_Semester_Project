@@ -24,6 +24,22 @@ def insert_donor():
     gender = input("Enter gender: ")
     health_history = input("Enter health history: ")
     last_donation_date = input("Enter last donation date (YYYY-MM-DD): ")
+    db=get_db_connection()
+    if db:
+        try:
+            cursor =db.cursor()
+            insert_query="""INSERT INTO donors(donor_id, name, contact, blood_type, date_of_birth, gender, health_history, last_donation_date)
+                              VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"""
+            cursor.execute(insert_query, (donor_id, name, contact, blood_type, date_of_birth, gender, health_history, last_donation_date))
+            db.commit()
+            print("Donor's data inserted successfully!")
+        except psycopg2.Error as e:
+            print("Error inserting donor data:", e)
+            db.rollback()
+        finally:
+            # Close the cursor and database connection
+            cursor.close()
+            db.close()
 
 # Function to recieve donor data into the database
 def insert_receiver():
@@ -39,13 +55,13 @@ def insert_receiver():
     if db:
         try:
             cursor =db.cursor()
-            insert_query="""INSERT INTO donors(recipient_id, name, contact, blood_type, date_of_birth, gender, health_history, hospital)
+            insert_query="""INSERT INTO recipients(recipient_id, name, contact, blood_type, date_of_birth, gender, health_history, hospital)
                               VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(insert_query, (recipent_id, name, contact, blood_type, date_of_birth, gender, health_history, hospital))
             db.commit()
             print("Receiver's data inserted successfully!")
         except psycopg2.Error as e:
-            print("Error inserting donor data:", e)
+            print("Error inserting recipient data:", e)
             db.rollback()
         finally:
             # Close the cursor and database connection
@@ -126,7 +142,6 @@ def after_update_blood_inventory():
 def insert_donations():
     donor_id = input("Enter donor's ID : ")
     blood_bank_id = input("Enter blood bank ID : ")
-    donation_date = input("Enter date of donation(YYYY-MM-DD) :")
     quantity_donated = input("Enter quantity of blood(ml) : ")
     blood_type = input("Enter blood type : ")
     health_check_information = input("Enter health check information : ")
@@ -136,7 +151,7 @@ def insert_donations():
         try:
             cursor = db.cursor()
            
-            trigger_query = """
+            trigger_query_before = """
                 CREATE OR REPLACE FUNCTION before_insert_donations_trigger()
                 RETURNS TRIGGER AS $$
                 BEGIN
@@ -159,16 +174,96 @@ def insert_donations():
                 FOR EACH ROW
                 EXECUTE FUNCTION before_insert_donations_trigger();
             """
-            cursor.execute(trigger_query)
+            cursor.execute(trigger_query_before)
             db.commit()
-            insert_query = """INSERT INTO donations(donor_id, blood_bank_id, donation_date, quantity_donated, blood_type, health_check_information)
-                              VALUES(%s, %s, %s, %s, %s, %s)"""
-            cursor.execute(insert_query, (donor_id, blood_bank_id, donation_date, quantity_donated, blood_type, health_check_information))
+
+            # trigger_query_after = """
+            #     CREATE OR REPLACE FUNCTION after_insert_donations_trigger()
+            #     RETURNS TRIGGER AS $$
+            #     BEGIN
+            #         -- Update blood inventory to reflect the new donation
+            #         UPDATE blood_inventory
+            #         SET quantity_available = quantity_available + NEW.quantity_donated
+            #         WHERE blood_bank_id = NEW.blood_bank_id
+            #         AND blood_type = NEW.blood_type;
+
+            #         -- Check if the quantity of a particular blood type falls below a certain threshold
+            #         IF (SELECT quantity_available FROM blood_inventory WHERE blood_bank_id = NEW.blood_bank_id AND blood_type = NEW.blood_type) < 200 THEN
+            #             -- Notify blood bank administrator (Replace 'notify_administrator()' with your notification logic)
+            #             PERFORM notify_administrator('Blood inventory for blood type ' || NEW.blood_type || ' fell below threshold at blood bank ' || NEW.blood_bank_id);
+            #         END IF;
+
+            #         RETURN NEW;
+            #     END;
+            #     $$ LANGUAGE plpgsql;
+
+            #     -- Create the trigger
+            #     CREATE OR REPLACE TRIGGER donations_after_insert_trigger
+            #     AFTER INSERT ON donations
+            #     FOR EACH ROW
+            #     EXECUTE FUNCTION after_insert_donations_trigger();
+            #     """
+            
+            # cursor.execute(trigger_query_after)
+            # db.commit()
+
+            trigger_query_after1 = """
+                CREATE OR REPLACE FUNCTION update_inventory()
+                RETURNS TRIGGER AS $$
+                
+                BEGIN
+                    UPDATE blood_inventory
+                    SET expiry_date = NEW.donation_date + INTERVAL '30 days',
+                        quantity_available = quantity_available + NEW.quantity_donated,
+                        blood_type = NEW.blood_type
+                    WHERE donor_id = NEW.donor_id;
+
+                    RETURN NEW;
+                
+                END;
+
+                $$ LANGUAGE plpgsql;
+
+                CREATE OR REPLACE TRIGGER update_blood_inventory
+                AFTER INSERT ON donations
+                FOR EACH ROW
+                EXECUTE FUNCTION update_inventory();   
+            """
+
+            cursor.execute(trigger_query_after1)
             db.commit()
+            insert_query = """INSERT INTO donations(donor_id, blood_bank_id, quantity_donated, blood_type, health_check_information, donation_date)
+                              VALUES(%s, %s, %s, %s, %s, CURRENT_DATE)"""
+            cursor.execute(insert_query, (donor_id, blood_bank_id, quantity_donated, blood_type, health_check_information))
+            db.commit()
+
             print("Data inserted successfully!")
             
         except psycopg2.Error as e:
             print("Error creating trigger:", e)
+            db.rollback()
+        finally:
+            # Close the cursor and database connection
+            cursor.close()
+            db.close()
+
+def insert_blood_inventory():
+    inventory_id = input("Enter Inventory ID : ")
+    blood_bank_id = input("Enter Blood Bank ID : ")
+    quantity_available = input("Enter quantity available : ")
+    donor_id = input("Enter donor ID : ")
+
+    db = get_db_connection()
+    if db:
+        try:
+            cursor = db.cursor()
+            insert_query = """INSERT INTO blood_inventory(inventory_id, blood_bank_id, quantity_available, donor_id)
+                              VALUES(%s, %s, %s, %s)"""
+            cursor.execute(insert_query, (inventory_id, blood_bank_id, quantity_available, donor_id))
+            db.commit()
+            print("Data inserted successfully!")
+        except psycopg2.Error as e:
+            print("Error inserting data:", e)
             db.rollback()
         finally:
             # Close the cursor and database connection
@@ -235,3 +330,4 @@ def view_table_data(table_name):
 # insert_blood_bank()
 insert_donations()
 # insert_blood_bank()
+# insert_blood_inventory()

@@ -93,51 +93,6 @@ def insert_blood_bank():
             cursor.close()
             db.close()
 
-#trigger fuction for blood inventory
-def after_update_blood_inventory():
-    db = get_db_connection()
-    if db:
-        try:
-            cursor = db.cursor()
-           
-            trigger_query = """
-                CREATE OR REPLACE FUNCTION after_update_blood_inventory_trigger()
-                RETURNS TRIGGER AS $$
-                DECLARE
-                    blood_type_threshold INT := 100; 
-                    blood_expiry_period INTERVAL := '90 days';  
-                BEGIN
-                    -- if the quantity of any blood type falls below the threshold
-                    IF NEW.quantity < blood_type_threshold THEN
-                       
-                        RAISE NOTICE 'Alert: Quantity of blood type % is below threshold', NEW.blood_type;
-                    END IF;
-
-                    
-                    UPDATE blood_inventory
-                    SET expiry_date = NEW.date_collected + blood_expiry_period
-                    WHERE blood_id = NEW.blood_id;
-
-                    RETURN NEW;
-                END;
-                $$ LANGUAGE plpgsql;
-                
-                CREATE TRIGGER blood_inventory_after_update_trigger
-                AFTER UPDATE ON blood_inventory
-                FOR EACH ROW
-                EXECUTE FUNCTION after_update_blood_inventory();
-            """
-            cursor.execute(trigger_query)
-            db.commit()
-            
-        except psycopg2.Error as e:
-            print("Error creating trigger:", e)
-            db.rollback()
-        finally:
-            # Close the cursor and database connection
-            cursor.close()
-            db.close()
-
 
 def insert_donations():
     donor_id = input("Enter donor's ID : ")
@@ -183,9 +138,6 @@ def insert_donations():
             #     BEGIN
             #         -- Update blood inventory to reflect the new donation
             #         UPDATE blood_inventory
-            #         SET quantity_available = quantity_available + NEW.quantity_donated
-            #         WHERE blood_bank_id = NEW.blood_bank_id
-            #         AND blood_type = NEW.blood_type;
 
             #         -- Check if the quantity of a particular blood type falls below a certain threshold
             #         IF (SELECT quantity_available FROM blood_inventory WHERE blood_bank_id = NEW.blood_bank_id AND blood_type = NEW.blood_type) < 200 THEN
@@ -214,7 +166,7 @@ def insert_donations():
                 BEGIN
                     UPDATE blood_inventory
                     SET expiry_date = NEW.donation_date + INTERVAL '30 days',
-                        quantity_available = quantity_available + NEW.quantity_donated,
+                        quantity_available = COALESCE(quantity_available, 0) + NEW.quantity_donated,
                         blood_type = NEW.blood_type
                     WHERE donor_id = NEW.donor_id;
 
@@ -250,16 +202,39 @@ def insert_donations():
 def insert_blood_inventory():
     inventory_id = input("Enter Inventory ID : ")
     blood_bank_id = input("Enter Blood Bank ID : ")
-    quantity_available = input("Enter quantity available : ")
     donor_id = input("Enter donor ID : ")
 
     db = get_db_connection()
     if db:
         try:
             cursor = db.cursor()
-            insert_query = """INSERT INTO blood_inventory(inventory_id, blood_bank_id, quantity_available, donor_id)
-                              VALUES(%s, %s, %s, %s)"""
-            cursor.execute(insert_query, (inventory_id, blood_bank_id, quantity_available, donor_id))
+
+            trigger_query = """
+                CREATE OR REPLACE FUNCTION blood_threshold()
+                RETURNS TRIGGER AS $$
+                DECLARE
+                    blood_type_threshold INT := 100;  
+                BEGIN
+                    -- if the quantity of any blood type falls below the threshold
+                    IF NEW.quantity_available < blood_type_threshold THEN
+                       
+                        RAISE NOTICE 'Alert: Quantity of blood type % is below threshold', NEW.blood_type;
+                    END IF;
+
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+                
+                CREATE OR REPLACE TRIGGER blood_inventory_after_update_trigger
+                AFTER UPDATE ON blood_inventory
+                FOR EACH ROW
+                EXECUTE FUNCTION blood_threshold();
+            """
+            cursor.execute(trigger_query)
+            db.commit()
+            insert_query = """INSERT INTO blood_inventory(inventory_id, blood_bank_id, donor_id)
+                              VALUES(%s, %s, %s)"""
+            cursor.execute(insert_query, (inventory_id, blood_bank_id, donor_id))
             db.commit()
             print("Data inserted successfully!")
         except psycopg2.Error as e:
@@ -296,7 +271,7 @@ def before_insert_blood_inventory():
                 END;
                 $$ LANGUAGE plpgsql;
                 
-                CREATE TRIGGER blood_inventory_before_insert_trigger
+                CREATE OR REPLACE TRIGGER blood_inventory_before_insert_trigger
                 BEFORE INSERT ON blood_inventory
                 FOR EACH ROW
                 EXECUTE FUNCTION before_insert_blood_inventory();

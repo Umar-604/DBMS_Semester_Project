@@ -28,6 +28,19 @@ name_label.grid(row=1, column=0, padx=10, pady=10)
 name_entry = Entry(new_donor_window)
 name_entry.grid(row=1, column=1, padx=10, pady=10)
 
+# Contact
+contact_label = Label(new_donor_window, text="Contact:")
+contact_label.grid(row=2, column=0, padx=10, pady=10)
+contact_entry = Entry(new_donor_window)
+contact_entry.grid(row=2, column=1, padx=10, pady=10)
+
+# Blood Type
+blood_type_label = Label(new_donor_window, text="Blood Type:")
+blood_type_label.grid(row=3, column=0, padx=10, pady=10)
+blood_type_combobox = ttk.Combobox(new_donor_window, values=blood_types, state="readonly")  # Create combobox
+blood_type_combobox.current(0)  # Set default value
+blood_type_combobox.grid(row=3, column=1, padx=10, pady=10)
+
 
 root = Tk()
 root.title("Donation Page")

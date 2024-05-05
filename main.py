@@ -50,5 +50,8 @@ button1.pack(pady=10)
 button2 = Button(option_frame, text="Receiver")
 button2.pack(pady=10)
 
+# List of blood types and genders
+blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+gender_types = ["Male", "Female", "None"]
 
 root.mainloop()

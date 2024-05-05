@@ -39,4 +39,8 @@ right_frame.pack_propagate(0)  # Prevent the frame from resizing
 heading_label = Label(right_frame, text="Welcome to Blood Donation System", font=font_style, bg="#f9efbe")
 heading_label.pack(pady=20)
 
+# Option Frame
+option_frame = Frame(right_frame, bg="#f9efbe")
+option_frame.pack(pady=20)
+
 root.mainloop()

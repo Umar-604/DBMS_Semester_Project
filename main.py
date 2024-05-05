@@ -11,64 +11,64 @@ def open_donation_options():
         elif option == "Existing Donor":
             existing_donor_window()
 
-    def new_donor_window():
-        new_donor_window = Toplevel(root)
-        new_donor_window.title("New Donor Information")
-        new_donor_window.geometry("400x400")
+        def new_donor_window():
+            new_donor_window = Toplevel(root)
+            new_donor_window.title("New Donor Information")
+            new_donor_window.geometry("400x400")
 
-# Donor ID
-donor_id_label = Label(new_donor_window, text="Donor ID:")
-donor_id_label.grid(row=0, column=0, padx=10, pady=10)
-donor_id_entry = Entry(new_donor_window)
-donor_id_entry.grid(row=0, column=1, padx=10, pady=10)
+        # Donor ID
+        donor_id_label = Label(new_donor_window, text="Donor ID:")
+        donor_id_label.grid(row=0, column=0, padx=10, pady=10)
+        donor_id_entry = Entry(new_donor_window)
+        donor_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
-# Name
-name_label = Label(new_donor_window, text="Name:")
-name_label.grid(row=1, column=0, padx=10, pady=10)
-name_entry = Entry(new_donor_window)
-name_entry.grid(row=1, column=1, padx=10, pady=10)
+        # Name
+        name_label = Label(new_donor_window, text="Name:")
+        name_label.grid(row=1, column=0, padx=10, pady=10)
+        name_entry = Entry(new_donor_window)
+        name_entry.grid(row=1, column=1, padx=10, pady=10)
 
-# Contact
-contact_label = Label(new_donor_window, text="Contact:")
-contact_label.grid(row=2, column=0, padx=10, pady=10)
-contact_entry = Entry(new_donor_window)
-contact_entry.grid(row=2, column=1, padx=10, pady=10)
+        # Contact
+        contact_label = Label(new_donor_window, text="Contact:")
+        contact_label.grid(row=2, column=0, padx=10, pady=10)
+        contact_entry = Entry(new_donor_window)
+        contact_entry.grid(row=2, column=1, padx=10, pady=10)
 
-# Blood Type
-blood_type_label = Label(new_donor_window, text="Blood Type:")
-blood_type_label.grid(row=3, column=0, padx=10, pady=10)
-blood_type_combobox = ttk.Combobox(new_donor_window, values=blood_types, state="readonly")  # Create combobox
-blood_type_combobox.current(0)  # Set default value
-blood_type_combobox.grid(row=3, column=1, padx=10, pady=10)
+        # Blood Type
+        blood_type_label = Label(new_donor_window, text="Blood Type:")
+        blood_type_label.grid(row=3, column=0, padx=10, pady=10)
+        blood_type_combobox = ttk.Combobox(new_donor_window, values=blood_types, state="readonly")  # Create combobox
+        blood_type_combobox.current(0)  # Set default value
+        blood_type_combobox.grid(row=3, column=1, padx=10, pady=10)
 
-# Gender
-gender_label = Label(new_donor_window, text="Gender:")
-gender_label.grid(row=4, column=0, padx=10, pady=10)
-gender_combobox = ttk.Combobox(new_donor_window, values=gender_types, state="readonly")  # Create combobox
-gender_combobox.current(0)  # Set default value
-gender_combobox.grid(row=4, column=1, padx=10, pady=10)
+        # Gender
+        gender_label = Label(new_donor_window, text="Gender:")
+        gender_label.grid(row=4, column=0, padx=10, pady=10)
+        gender_combobox = ttk.Combobox(new_donor_window, values=gender_types, state="readonly")  # Create combobox
+        gender_combobox.current(0)  # Set default value
+        gender_combobox.grid(row=4, column=1, padx=10, pady=10)
 
-# Date of Birth
-dob_label = Label(new_donor_window, text="Date of Birth:")
-dob_label.grid(row=5, column=0, padx=10, pady=10)
-dob_entry = Entry(new_donor_window)
-dob_entry.grid(row=5, column=1, padx=10, pady=10)
+        # Date of Birth
+        dob_label = Label(new_donor_window, text="Date of Birth:")
+        dob_label.grid(row=5, column=0, padx=10, pady=10)
+        dob_entry = Entry(new_donor_window)
+        dob_entry.grid(row=5, column=1, padx=10, pady=10)
 
-# Health History
-health_history_label = Label(new_donor_window, text="Health History:")
-health_history_label.grid(row=6, column=0, padx=10, pady=10)
-health_history_entry = Entry(new_donor_window)
-health_history_entry.grid(row=6, column=1, padx=10, pady=10)
+        # Health History
+        health_history_label = Label(new_donor_window, text="Health History:")
+        health_history_label.grid(row=6, column=0, padx=10, pady=10)
+        health_history_entry = Entry(new_donor_window)
+        health_history_entry.grid(row=6, column=1, padx=10, pady=10)
 
-# Last Donation Date
-last_donation_date_label = Label(new_donor_window, text="Last Donation Date:")
-last_donation_date_label.grid(row=7, column=0, padx=10, pady=10)
-last_donation_date_entry = Entry(new_donor_window)
-last_donation_date_entry.grid(row=7, column=1, padx=10, pady=10)
+        # Last Donation Date
+        last_donation_date_label = Label(new_donor_window, text="Last Donation Date:")
+        last_donation_date_label.grid(row=7, column=0, padx=10, pady=10)
+        last_donation_date_entry = Entry(new_donor_window)
+        last_donation_date_entry.grid(row=7, column=1, padx=10, pady=10)
 
-# Submit Button
-submit_button = Button(new_donor_window, text="Submit", command=lambda: submit_donor_info(donor_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry))
-submit_button.grid(row=8, columnspan=2, padx=10, pady=10)
+        # Submit Button
+        submit_button = Button(new_donor_window, text="Submit", command=lambda: submit_donor_info(donor_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry))
+        submit_button.grid(row=8, columnspan=2, padx=10, pady=10)
 
 root = Tk()
 root.title("Donation Page")

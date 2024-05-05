@@ -5,9 +5,6 @@ from PIL import Image, ImageTk
 
 blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
 
-root = Tk()
-root.geometry("500x500")
-root.title("Make a Donation")
 
 def resize_image(event):
     # Get the new canvas size
@@ -25,5 +22,10 @@ def resize_image(event):
     
     # Reposition the input bar
     reposition_input_bar(new_width, new_height)
+
+
+root = Tk()
+root.geometry("500x500")
+root.title("Make a Donation")
 
 root.mainloop()

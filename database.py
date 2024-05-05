@@ -303,6 +303,6 @@ def view_table_data(table_name):
 # insert_donor()
 # insert_receiver()
 # insert_blood_bank()
-insert_donations()
+# insert_donations()
 # insert_blood_bank()
 # insert_blood_inventory()

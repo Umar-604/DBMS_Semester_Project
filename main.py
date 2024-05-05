@@ -1,28 +1,33 @@
 from tkinter import *
+from tkinter import messagebox
+from tkinter import ttk  # Import ttk module for themed widgets
 from PIL import Image, ImageTk
+from database import *
 
+root = Tk()
+root.title("Donation Page")
+root.geometry("500x500")
 
-# Create the Tkinter window
-dbms_root = Tk()
-dbms_root.geometry("600x345")
-dbms_root.minsize(300,300)
+# Styling
+root.configure(bg="#f9efbe")
+font_style = ("Arial", 12, "bold")
 
-dbms_root.configure(background='black')  # Set background color to black
+# Container Frame
+container_frame = Frame(root, bg="#f9efbe")
+container_frame.pack(fill="both", expand=True)
 
-# Open and resize the image
+# Left Side Frame
+left_frame = Frame(container_frame, bg="red")
+left_frame.pack(side="left", fill="both", expand=True)
+left_frame.pack_propagate(0)  # Prevent the frame from resizing
 
-image = Image.open(r"image/istockphoto-1224861391-612x612.jpg")
-image = image.resize((dbms_root.winfo_screenwidth(), dbms_root.winfo_screenheight()))
-background_image = ImageTk.PhotoImage(image)
+# Image
+image_path = "front.jpeg"
+image = Image.open(image_path)
+image = image.resize((600, 750), Image.BICUBIC)  # Increase the size of the image
+image = ImageTk.PhotoImage(image)
+image_label = Label(left_frame, image=image, bg="red")
+image_label.image = image
+image_label.pack(fill="both", expand=True)
 
-# Create a Label with the background image
-background_label = Label(dbms_root, image=background_image)
-background_label.place(x=0, y=0, relwidth=1, relheight=1)
-
-# Add other widgets on top of the background image
-donation_label = Label(dbms_root, text="BLOOD DONATION PROJECT", font=("Helvetica", 24), bg="navyblue", fg="white")
-donation_label.pack(pady=20)
-
-# Run the Tkinter event loop
-dbms_root.mainloop()
-
+root.mainloop()

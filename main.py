@@ -146,7 +146,7 @@ left_frame.pack(side="left", fill="both", expand=True)
 left_frame.pack_propagate(0)  # Prevent the frame from resizing
 
 # Image
-image_path = "front.jpeg"
+image_path = "image/front.jpeg"
 image = Image.open(image_path)
 image = image.resize((600, 750), Image.BICUBIC)  # Increase the size of the image
 image = ImageTk.PhotoImage(image)
@@ -168,11 +168,14 @@ option_frame = Frame(right_frame, bg="#f9efbe")
 option_frame.pack(pady=20)
 
 # Buttons
-button1 = Button(option_frame, text="Make Your Donation", command=open_donation_options)
+button1 = Button(option_frame, text="Donor", command=open_donation_options)
 button1.pack(pady=10)
 
 button2 = Button(option_frame, text="Receiver")
 button2.pack(pady=10)
+
+button3 = Button(option_frame, text="Make a Donation")
+button3.pack(pady=10)
 
 # List of blood types and genders
 blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]

@@ -181,4 +181,5 @@ button3.pack(pady=10)
 blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
 gender_types = ["Male", "Female", "None"]
 
+
 root.mainloop()

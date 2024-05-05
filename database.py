@@ -282,6 +282,24 @@ def before_insert_blood_inventory():
             db.close()
 
 
+def view_donor(donor_id):
+    db = get_db_connection()
+    cursor = db.cursor()
+    try:
+        cursor.execute("SELECT * FROM donors WHERE donor_id = %s", (donor_id))
+        donor_records = cursor.fetchall()
+        if donor_records:
+            for record in donor_records:
+                print(record)  # Or process the records as needed
+        else:
+            print("No records found for donor ID:", donor_id)
+    except psycopg2.Error as e:
+        print("Error viewing donor records:", e)
+    finally:
+        cursor.close()
+        db.close()
+        return donor_records
+
 def view_table_data(table_name):
     db = get_db_connection()
     cursor = db.cursor()

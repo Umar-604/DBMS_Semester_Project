@@ -43,4 +43,12 @@ heading_label.pack(pady=20)
 option_frame = Frame(right_frame, bg="#f9efbe")
 option_frame.pack(pady=20)
 
+# Buttons
+button1 = Button(option_frame, text="Make Your Donation", command=open_donation_options)
+button1.pack(pady=10)
+
+button2 = Button(option_frame, text="Receiver")
+button2.pack(pady=10)
+
+
 root.mainloop()

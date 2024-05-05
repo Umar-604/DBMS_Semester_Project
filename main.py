@@ -30,4 +30,9 @@ image_label = Label(left_frame, image=image, bg="red")
 image_label.image = image
 image_label.pack(fill="both", expand=True)
 
+# Right Side Frame
+right_frame = Frame(container_frame, bg="#f9efbe")
+right_frame.pack(side="right", fill="both", expand=True)
+right_frame.pack_propagate(0)  # Prevent the frame from resizing
+
 root.mainloop()

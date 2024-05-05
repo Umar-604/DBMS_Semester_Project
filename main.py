@@ -66,9 +66,9 @@ def open_donation_options():
         last_donation_date_entry = Entry(new_donor_window)
         last_donation_date_entry.grid(row=7, column=1, padx=10, pady=10)
 
-# Submit Button
-submit_button = Button(new_donor_window, text="Submit", command=lambda: submit_donor_info(donor_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry))
-submit_button.grid(row=8, columnspan=2, padx=10, pady=10)
+        # Submit Button
+        submit_button = Button(new_donor_window, text="Submit", command=lambda: submit_donor_info(donor_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry))
+        submit_button.grid(row=8, columnspan=2, padx=10, pady=10)
 
 root = Tk()
 root.title("Donation Page")

@@ -106,7 +106,27 @@ def open_donation_options():
             else:
                 donor_records_label.config(text="No records found for donor ID: " + donor_id)
 
+        # Donor ID
+        donor_id_label = Label(existing_donor_window, text="Donor ID:")
+        donor_id_label.grid(row=0, column=0, padx=10, pady=10)
+        donor_id_entry = Entry(existing_donor_window)
+        donor_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
+        # Submit Button
+        submit_button = Button(existing_donor_window, text="Submit", command=submit_donor_id)
+        submit_button.grid(row=1, columnspan=2, padx=10, pady=10)
+
+    donation_options_window = Toplevel(root)
+    donation_options_window.title("Donation Options")
+    donation_options_window.geometry("300x200")
+
+    # New Donor button
+    new_donor_button = Button(donation_options_window, text="New Donor", command=lambda: on_option_click("New Donor"))
+    new_donor_button.pack(pady=10)
+
+    # Existing Donor button
+    existing_donor_button = Button(donation_options_window, text="Existing Donor", command=lambda: on_option_click("Existing Donor"))
+    existing_donor_button.pack(pady=10)
 
 root = Tk()
 root.title("Donation Page")

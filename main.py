@@ -16,6 +16,18 @@ def open_donation_options():
         new_donor_window.title("New Donor Information")
         new_donor_window.geometry("400x400")
 
+# Donor ID
+donor_id_label = Label(new_donor_window, text="Donor ID:")
+donor_id_label.grid(row=0, column=0, padx=10, pady=10)
+donor_id_entry = Entry(new_donor_window)
+donor_id_entry.grid(row=0, column=1, padx=10, pady=10)
+
+# Name
+name_label = Label(new_donor_window, text="Name:")
+name_label.grid(row=1, column=0, padx=10, pady=10)
+name_entry = Entry(new_donor_window)
+name_entry.grid(row=1, column=1, padx=10, pady=10)
+
 
 root = Tk()
 root.title("Donation Page")

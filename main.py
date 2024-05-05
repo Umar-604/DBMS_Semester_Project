@@ -4,6 +4,19 @@ from tkinter import ttk  # Import ttk module for themed widgets
 from PIL import Image, ImageTk
 from database import *
 
+def open_donation_options():
+    def on_option_click(option):
+        if option == "New Donor":
+            new_donor_window()
+        elif option == "Existing Donor":
+            existing_donor_window()
+
+    def new_donor_window():
+        new_donor_window = Toplevel(root)
+        new_donor_window.title("New Donor Information")
+        new_donor_window.geometry("400x400")
+
+
 root = Tk()
 root.title("Donation Page")
 root.geometry("500x500")

@@ -84,6 +84,30 @@ def open_donation_options():
         submit_button = Button(new_donor_window, text="Submit", command=lambda: submit_donor_info(donor_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry))
         submit_button.grid(row=8, columnspan=2, padx=10, pady=10)
 
+    def existing_donor_window():
+        existing_donor_window = Toplevel(root)
+        existing_donor_window.title("Existing Donor Information")
+        existing_donor_window.geometry("300x200")
+
+        # Label to display donor records
+        donor_records_label = Label(existing_donor_window, text="", wraplength=280, justify=LEFT)
+        donor_records_label.grid(row=2, columnspan=2, padx=10, pady=10)
+
+        # Function to handle the submission of donor ID
+        def submit_donor_id():
+            donor_id = donor_id_entry.get()
+            donor_records = view_donor(donor_id)
+            if donor_records:
+                # Convert donor records to a string
+                records_text = ""
+                for record in donor_records:
+                    records_text += ", ".join(str(field) for field in record) + "\n"
+                donor_records_label.config(text=records_text)
+            else:
+                donor_records_label.config(text="No records found for donor ID: " + donor_id)
+
+
+
 root = Tk()
 root.title("Donation Page")
 root.geometry("500x500")

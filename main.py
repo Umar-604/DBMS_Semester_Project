@@ -11,10 +11,24 @@ def open_donation_options():
         elif option == "Existing Donor":
             existing_donor_window()
 
-        def new_donor_window():
-            new_donor_window = Toplevel(root)
-            new_donor_window.title("New Donor Information")
-            new_donor_window.geometry("400x400")
+    def new_donor_window():
+        new_donor_window = Toplevel(root)
+        new_donor_window.title("New Donor Information")
+        new_donor_window.geometry("400x400")
+
+            # Function to handle the submission of donor information
+        def submit_donor_info(donor_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry):
+            donor_id = donor_id_entry.get()
+            name = name_entry.get()
+            contact = contact_entry.get()
+            blood_type = blood_type_combobox.get()  # Getting the selected blood type from the combobox
+            dob = dob_entry.get()
+            gender = gender_combobox.get()
+            health_history = health_history_entry.get()
+            last_donation_date = last_donation_date_entry.get()
+
+            insert_donor(donor_id, name, contact, blood_type, dob, gender, health_history, last_donation_date)
+            messagebox.showinfo("Donor Information", f"Donor ID: {donor_id}\nName: {name}\nContact: {contact}\nBlood Type: {blood_type}\nDate of Birth: {dob}\nGender: {gender}\nHealth History: {health_history}\nLast Donation Date: {last_donation_date}")
 
         # Donor ID
         donor_id_label = Label(new_donor_window, text="Donor ID:")

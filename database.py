@@ -14,16 +14,8 @@ def get_db_connection():
         return None
 
 # Function to insert donor data into the database
-def insert_donor():
-    # Get donor data from the user
-    donor_id = input("Enter donor ID: ")
-    name = input("Enter name: ")
-    contact = input("Enter contact number: ")
-    blood_type = input("Enter blood type: ")
-    date_of_birth = input("Enter date of birth (YYYY-MM-DD): ")
-    gender = input("Enter gender: ")
-    health_history = input("Enter health history: ")
-    last_donation_date = input("Enter last donation date (YYYY-MM-DD): ")
+def insert_donor(donor_id, name, contact, blood_type, date_of_birth, gender, health_history, last_donation_date):
+
     db=get_db_connection()
     if db:
         try:

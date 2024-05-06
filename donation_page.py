@@ -24,6 +24,17 @@ def resize_image(event):
     reposition_input_bar(new_width, new_height)
 
 
+def reposition_input_bar(new_width, new_height):
+    # Calculate the center position for the input bar
+    bar_x = new_width // 2 - input_frame.winfo_reqwidth() // 2
+    bar_y = new_height // 2 - input_frame.winfo_reqheight() // 2
+    
+    # Set the new position for the frame containing input widgets
+    input_frame.place(x=bar_x, y=bar_y)
+
+    # Set the new position for the frame containing input widgets
+    input_frame.place(x=bar_x, y=bar_y)
+
 root = Tk()
 root.geometry("500x500")
 root.title("Make a Donation")

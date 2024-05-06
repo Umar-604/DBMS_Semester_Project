@@ -66,4 +66,34 @@ rectangle = canvas.create_rectangle(0, 0, width, height, fill="white", stipple="
 # Create a frame for input widgets
 input_frame = Frame(root, bg="white")
 
+# Example input widgets
+label1 = Label(input_frame, text="Donor ID:")
+label1.grid(row=0, column=0, padx=10, pady=10)
+entry1 = Entry(input_frame)
+entry1.grid(row=0, column=1, padx=10, pady=10)
+
+label2 = Label(input_frame, text="Blood Bank ID:")
+label2.grid(row=1, column=0, padx=10, pady=10)
+entry2 = Entry(input_frame)
+entry2.grid(row=1, column=1, padx=10, pady=10)
+
+label3 = Label(input_frame, text="Quantity Donated:")
+label3.grid(row=2, column=0, padx=10, pady=10)
+entry3 = Entry(input_frame)
+entry3.grid(row=2, column=1, padx=10, pady=10)
+
+label4 = Label(input_frame, text="Blood Type:")
+label4.grid(row=3, column=0, padx=10, pady=10)
+label4_combobox = ttk.Combobox(input_frame, values=blood_types, state="readonly")  # Create combobox
+label4_combobox.current(0)  # Set default value
+label4_combobox.grid(row=3, column=1, padx=10, pady=10)
+
+label5 = Label(input_frame, text="Health Check Info:")
+label5.grid(row=4, column=0, padx=10, pady=10)
+entry5 = Entry(input_frame)
+entry5.grid(row=4, column=1, padx=10, pady=10)
+
+submit_button = Button(input_frame, text="Submit", width="15")
+submit_button.grid(row=5, columnspan=2, padx=10, pady=10)
+
 root.mainloop()

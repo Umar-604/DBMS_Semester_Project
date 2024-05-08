@@ -191,11 +191,7 @@ def insert_donations():
             cursor.close()
             db.close()
 
-def insert_blood_inventory():
-    inventory_id = input("Enter Inventory ID : ")
-    blood_bank_id = input("Enter Blood Bank ID : ")
-    donor_id = input("Enter donor ID : ")
-
+def insert_blood_inventory(inventory_id, blood_bank_id, donor_id):
     db = get_db_connection()
     if db:
         try:

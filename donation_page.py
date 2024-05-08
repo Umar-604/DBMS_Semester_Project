@@ -40,7 +40,7 @@ root.geometry("500x500")
 root.title("Make a Donation")
 
 # Load the original image
-original_image = Image.open("image1.jpg")
+original_image = Image.open("image/image1.jpg")
 
 # Create a Canvas
 canvas = Canvas(root)

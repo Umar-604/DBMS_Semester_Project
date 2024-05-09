@@ -32,6 +32,11 @@ class ReceiverGUI:
             insert_receiver(receiver_id, name, contact, blood_type, dob, gender, health_history, last_donation_date)
             messagebox.showinfo("receiver Information", f"receiver ID: {receiver_id}\nName: {name}\nContact: {contact}\nBlood Type: {blood_type}\nDate of Birth: {dob}\nGender: {gender}\nHealth History: {health_history}\nLast Donation Date: {last_donation_date}")
 
+        # receiver ID
+        receiver_id_label = Label(new_receiver_window, text="receiver ID:")
+        receiver_id_label.grid(row=0, column=0, padx=10, pady=10)
+        receiver_id_entry = Entry(new_receiver_window)
+        receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
         # Create the donation options window
         self.receiver_options_window.title("Receiver Options")

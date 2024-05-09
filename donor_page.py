@@ -1,3 +1,4 @@
+from itertools import tee
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk  
@@ -116,6 +117,8 @@ class DonorGUI:
            # Define columns
         tree["columns"] = ("Donor ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health History", "Last Donation Date")
                 
-
-
+    # Column headings
+        tree.heading("#0")
+    for column in tee["columns"]:
+            tee.heading(column, text=column)
     

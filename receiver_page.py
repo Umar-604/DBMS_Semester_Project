@@ -101,3 +101,35 @@ class ReceiverGUI:
 
         self.blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
         self.gender_types = ["Male", "Female", "None"]
+        
+def existing_receiver_window(self):
+        existing_receiver_window = Toplevel()
+        existing_receiver_window.title("Existing  receiver Information")
+        existing_receiver_window.geometry("300x200")
+
+        # Rest of the code for the existing  receiver window...
+        receiver_records_label = Label(existing_receiver_window, text="", wraplength=280, justify=LEFT)
+        receiver_records_label.grid(row=2, columnspan=2, padx=10, pady=10)
+
+        # Function to handle the submission of  receiver ID
+        def submit_receiver_id():
+            receiver_id = receiver_id_entry.get()
+            receiver_records = view_receiver(receiver_id)
+            if receiver_records:
+                # Convert  receiver records to a string
+                records_text = ""
+                for record in receiver_records:
+                    records_text += ", ".join(str(field) for field in record) + "\n"
+                receiver_records_label.config(text=records_text)
+            else:
+                receiver_records_label.config(text="No records found for  receiver ID: " + receiver_id)
+
+        #  receiver ID
+        receiver_id_label = Label(existing_receiver_window, text="Donor ID:")
+        receiver_id_label.grid(row=0, column=0, padx=10, pady=10)
+        receiver_id_entry = Entry(existing_receiver_window)
+        receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
+
+        # Submit Button
+        submit_button = Button(existing_receiver_window, text="Submit", command=submit_receiver_id)
+        submit_button.grid(row=1, columnspan=2, padx=10, pady=10)

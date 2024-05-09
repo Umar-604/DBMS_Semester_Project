@@ -44,3 +44,13 @@ class Inventory:
             # Insert data
             for record in inventory_records:
                 self.tree.insert("", "end", values=record)
+            
+            # Display Treeview
+            self.tree.pack(fill="both", expand=True)
+            
+            # Add scrollbar
+            scrollbar = ttk.Scrollbar(self.inventory, orient="vertical", command=self.tree.yview)
+            scrollbar.pack(side="right", fill="y")
+            self.tree.configure(yscrollcommand=scrollbar.set)
+        else:
+            messagebox.showinfo("No Records", "No records found ")

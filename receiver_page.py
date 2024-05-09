@@ -18,6 +18,21 @@ class ReceiverGUI:
         new_receiver_window.title("New receiver Information")
         new_receiver_window.geometry("400x400")
 
+        # Rest of the code for the new receiver window...
+        def submit_reciever_info(reciever_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry):
+            receiver_id = reciever_id_entry.get()
+            name = name_entry.get()
+            contact = contact_entry.get()
+            blood_type = blood_type_combobox.get()  # Getting the selected blood type from the combobox
+            dob = dob_entry.get()
+            gender = gender_combobox.get()
+            health_history = health_history_entry.get()
+            last_donation_date = last_donation_date_entry.get()
+
+            insert_receiver(receiver_id, name, contact, blood_type, dob, gender, health_history, last_donation_date)
+            messagebox.showinfo("receiver Information", f"receiver ID: {receiver_id}\nName: {name}\nContact: {contact}\nBlood Type: {blood_type}\nDate of Birth: {dob}\nGender: {gender}\nHealth History: {health_history}\nLast Donation Date: {last_donation_date}")
+
+
         # Create the donation options window
         self.receiver_options_window.title("Receiver Options")
         self.receiver_options_window.geometry("500x500")

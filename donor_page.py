@@ -95,5 +95,11 @@ class DonorGUI:
         # Submit Button
         submit_button = Button(new_donor_window, text="Submit", command=lambda: submit_donor_info(donor_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry))
         submit_button.grid(row=8, columnspan=2, padx=10, pady=10)
+        
+    def existing_donor_window(self):
+        existing_donor_window = Toplevel()
+        existing_donor_window.title("Existing Donor Information")
+        existing_donor_window.geometry("500x500")
+
 
     

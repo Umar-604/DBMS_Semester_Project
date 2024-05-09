@@ -4,6 +4,7 @@ from tkinter import ttk  # Import ttk module for themed widgets
 from PIL import Image, ImageTk
 from donation_page import *
 from database import *
+from receiver_page import open_receiver_gui
 
 def open_donation_options():
     def on_option_click(option):
@@ -132,6 +133,9 @@ def open_donation_options():
 def on_button_click():
     open_donation_gui()
 
+def receiver_button_click():
+    open_receiver_gui()
+
 root = Tk()
 root.title("Donation Page")
 root.geometry("500x500")
@@ -175,7 +179,7 @@ option_frame.pack(pady=20)
 button1 = Button(option_frame, text="Donor", command=open_donation_options)
 button1.pack(pady=10)
 
-button2 = Button(option_frame, text="Receiver")
+button2 = Button(option_frame, text="Receiver", command=lambda: open_receiver_gui())
 button2.pack(pady=10)
 
 button3 = Button(option_frame, text="Make a Donation", command=lambda: on_button_click())

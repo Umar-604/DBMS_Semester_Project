@@ -103,7 +103,15 @@ class DonorGUI:
         
         # Rest of the code for the existing donor window...
         donor_records_label = Label(existing_donor_window, text="", wraplength=280, justify=LEFT)
-        donor_records_label.grid(row=5, columnspan=2, padx=10, pady=10
+        donor_records_label.grid(row=5, columnspan=2, padx=10, pady=10)
+        
+        # Function to handle the submission of donor ID
+    def submit_donor_id():
+        donor_id = donor_id_entry.get()
+        donor_records = view_donor(donor_id)
+        if donor_records:
+        # Create Treeview widget
+          tree = ttk.Treeview(existing_donor_window)
 
 
     

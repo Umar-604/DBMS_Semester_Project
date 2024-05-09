@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk  # Import ttk module for themed widgets
 from PIL import Image, ImageTk
+from donation_page import *
 from database import *
 
 def open_donation_options():
@@ -128,6 +129,9 @@ def open_donation_options():
     existing_donor_button = Button(donation_options_window, text="Existing Donor", command=lambda: on_option_click("Existing Donor"))
     existing_donor_button.pack(pady=10)
 
+def on_button_click():
+    open_donation_gui()
+
 root = Tk()
 root.title("Donation Page")
 root.geometry("500x500")
@@ -174,7 +178,7 @@ button1.pack(pady=10)
 button2 = Button(option_frame, text="Receiver")
 button2.pack(pady=10)
 
-button3 = Button(option_frame, text="Make a Donation")
+button3 = Button(option_frame, text="Make a Donation", command=lambda: on_button_click())
 button3.pack(pady=10)
 
 # List of blood types and genders

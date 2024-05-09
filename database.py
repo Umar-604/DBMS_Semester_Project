@@ -86,13 +86,7 @@ def insert_blood_bank():
             db.close()
 
 
-def insert_donations():
-    donor_id = input("Enter donor's ID : ")
-    blood_bank_id = input("Enter blood bank ID : ")
-    quantity_donated = input("Enter quantity of blood(ml) : ")
-    blood_type = input("Enter blood type : ")
-    health_check_information = input("Enter health check information : ")
-
+def insert_donations(donor_id, blood_bank_id, quantity_donated, blood_type, health_check_information):
     db = get_db_connection()
     if db:
         try:

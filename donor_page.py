@@ -143,7 +143,13 @@ class DonorGUI:
                     donor_id = d_search_entry.get()  # Get the donor ID from the entry
                     donor_records = view_donor(donor_id)
 
-    if donor_records:
+        if donor_records:
                 delete_donor(donor_id)
-    else:  
+        else:  
                 messagebox.showinfo("No Records", "No records found for donor ID: " + donor_id)
+                
+        # Donor ID
+        donor_id_label = Label(existing_donor_window, text="Donor ID:")
+        donor_id_label.grid(row=0, column=0, padx=10, pady=10)
+        donor_id_entry = Entry(existing_donor_window)
+        donor_id_entry.grid(row=0, column=1, padx=10, pady=10)

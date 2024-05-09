@@ -10,3 +10,8 @@ class DonorGUI:
 # Create the donation options window
         self.donation_options_window.title("Donation Options")
         self.donation_options_window.geometry("500x500")
+        
+# New Donor button
+        new_donor_button = Button(self.donation_options_window, text="New Donor", command=lambda: self.on_option_click("New Donor"))
+        new_donor_button.pack(pady=10)
+

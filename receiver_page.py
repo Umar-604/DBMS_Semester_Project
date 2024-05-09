@@ -13,6 +13,11 @@ class ReceiverGUI:
         elif option == "Existing Receiver":
             self.existing_receiver_window()
 
+    def new_receiver_window(self):
+        new_receiver_window = Toplevel()
+        new_receiver_window.title("New receiver Information")
+        new_receiver_window.geometry("400x400")
+
         # Create the donation options window
         self.receiver_options_window.title("Receiver Options")
         self.receiver_options_window.geometry("500x500")

@@ -54,3 +54,13 @@ class Inventory:
             self.tree.configure(yscrollcommand=scrollbar.set)
         else:
             messagebox.showinfo("No Records", "No records found ")
+
+    def search_inventory_by_blood_type(self):
+        # Clear previous records
+        if self.tree:
+            self.tree.destroy()
+
+        blood_type = self.blood_type_combobox.get()
+        inventory_records = view_inventory(blood_type)
+        if inventory_records:
+            self.tree = ttk.Treeview(self.inventory, show="headings", selectmode="browse")

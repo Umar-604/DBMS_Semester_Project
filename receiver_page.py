@@ -64,6 +64,12 @@ class ReceiverGUI:
         gender_combobox.current(0)  # Set default value
         gender_combobox.grid(row=4, column=1, padx=10, pady=10)
 
+        # Date of Birth
+        dob_label = Label(new_receiver_window, text="Date of Birth:")
+        dob_label.grid(row=5, column=0, padx=10, pady=10)
+        dob_entry = Entry(new_receiver_window)
+        dob_entry.grid(row=5, column=1, padx=10, pady=10)
+
 
 
         # Create the donation options window

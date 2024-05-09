@@ -15,3 +15,9 @@ class DonorGUI:
         new_donor_button = Button(self.donation_options_window, text="New Donor", command=lambda: self.on_option_click("New Donor"))
         new_donor_button.pack(pady=10)
 
+ # Existing Donor button
+        existing_donor_button = Button(self.donation_options_window, text="Existing Donor", command=lambda: self.on_option_click("Existing Donor"))
+        existing_donor_button.pack(pady=10)
+
+        self.blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+        self.gender_types = ["Male", "Female", "None"]

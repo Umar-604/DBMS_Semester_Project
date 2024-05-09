@@ -112,15 +112,15 @@ class DonorGUI:
         donor_records = view_donor(donor_id)
         if donor_records:
         # Create Treeview widget
-          tree = ttk.Treeview(existing_donor_window)
+            tree = ttk.Treeview(existing_donor_window)
           
            # Define columns
-        tree["columns"] = ("Donor ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health History", "Last Donation Date")
+            tree["columns"] = ("Donor ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health History", "Last Donation Date")
                 
         # Column headings
-        tree.heading("#0")
-    for column in tee["columns"]:
-            tee.heading(column, text=column)
+            tree.heading("#0")
+            for column in tee["columns"]:
+             tee.heading(column, text=column)
             
          # Insert data
             for record in donor_records:
@@ -132,3 +132,18 @@ class DonorGUI:
             for col in tee["columns"]:
                     tee.column(col, width=120, anchor="center")  # Adjust width as needed
                 
+ # Add scrollbar
+            scrollbar = ttk.Scrollbar(existing_donor_window, orient="vertical", command=tree.yview)
+            scrollbar.grid(row=6, column=2, sticky="ns")
+            tee.configure(yscrollcommand=scrollbar.set)
+        else:
+                messagebox.showinfo("No Records", "No records found for donor ID: " + donor_id)
+
+                def delete_selected_donor():
+                    donor_id = d_search_entry.get()  # Get the donor ID from the entry
+                    donor_records = view_donor(donor_id)
+
+    if donor_records:
+                delete_donor(donor_id)
+    else:  
+                messagebox.showinfo("No Records", "No records found for donor ID: " + donor_id)

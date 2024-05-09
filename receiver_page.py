@@ -38,6 +38,12 @@ class ReceiverGUI:
         receiver_id_entry = Entry(new_receiver_window)
         receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
+        # Name
+        name_label = Label(new_receiver_window, text="Name:")
+        name_label.grid(row=1, column=0, padx=10, pady=10)
+        name_entry = Entry(new_receiver_window)
+        name_entry.grid(row=1, column=1, padx=10, pady=10)
+
         # Create the donation options window
         self.receiver_options_window.title("Receiver Options")
         self.receiver_options_window.geometry("500x500")

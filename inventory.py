@@ -73,3 +73,9 @@ class Inventory:
                 self.tree.heading(column, text=column)
                 self.tree.column(column, width=120, anchor="center")  # Adjust width as needed
             
+            # Insert data
+            for record in inventory_records:
+                self.tree.insert("", "end", values=record)
+            
+            # Display Treeview
+            self.tree.pack(fill="both", expand=True)

@@ -100,6 +100,10 @@ class DonorGUI:
         existing_donor_window = Toplevel()
         existing_donor_window.title("Existing Donor Information")
         existing_donor_window.geometry("500x500")
+        
+        # Rest of the code for the existing donor window...
+        donor_records_label = Label(existing_donor_window, text="", wraplength=280, justify=LEFT)
+        donor_records_label.grid(row=5, columnspan=2, padx=10, pady=10
 
 
     

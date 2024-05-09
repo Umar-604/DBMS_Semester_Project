@@ -50,6 +50,15 @@ class ReceiverGUI:
         contact_entry = Entry(new_receiver_window)
         contact_entry.grid(row=2, column=1, padx=10, pady=10)
 
+         # Blood Type
+        blood_type_label = Label(new_receiver_window, text="Blood Type:")
+        blood_type_label.grid(row=3, column=0, padx=10, pady=10)
+        blood_type_combobox = ttk.Combobox(new_receiver_window, values=self.blood_types, state="readonly")  # Create combobox
+        blood_type_combobox.current(0)  # Set default value
+        blood_type_combobox.grid(row=3, column=1, padx=10, pady=10)
+
+
+
         # Create the donation options window
         self.receiver_options_window.title("Receiver Options")
         self.receiver_options_window.geometry("500x500")

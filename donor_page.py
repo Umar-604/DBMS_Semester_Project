@@ -117,8 +117,12 @@ class DonorGUI:
            # Define columns
         tree["columns"] = ("Donor ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health History", "Last Donation Date")
                 
-    # Column headings
+        # Column headings
         tree.heading("#0")
     for column in tee["columns"]:
             tee.heading(column, text=column)
+            
+         # Insert data
+            for record in donor_records:
+                    tee.insert("", "end", values=record)
     

@@ -57,6 +57,13 @@ class ReceiverGUI:
         blood_type_combobox.current(0)  # Set default value
         blood_type_combobox.grid(row=3, column=1, padx=10, pady=10)
 
+         # Gender
+        gender_label = Label(new_receiver_window, text="Gender:")
+        gender_label.grid(row=4, column=0, padx=10, pady=10)
+        gender_combobox = ttk.Combobox(new_receiver_window, values=self.gender_types, state="readonly")  # Create combobox
+        gender_combobox.current(0)  # Set default value
+        gender_combobox.grid(row=4, column=1, padx=10, pady=10)
+
 
 
         # Create the donation options window

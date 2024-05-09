@@ -296,6 +296,7 @@ def view_donor(donor_id):
         db.close()
         return donor_records
 
+<<<<<<< Updated upstream
 def view_donation(donor_id):
     db = get_db_connection()
     cursor = db.cursor()
@@ -313,6 +314,9 @@ def view_donation(donor_id):
         cursor.close()
         db.close()
         return donation_records
+=======
+
+>>>>>>> Stashed changes
 
 def view_table_data(table_name):
     db = get_db_connection()

@@ -91,5 +91,3 @@ submit_button = Button(input_frame, text="Submit", width="15", command=lambda: s
 submit_button.grid(row=4, columnspan=2, padx=10, pady=10)
 
 root.mainloop()
-
-            

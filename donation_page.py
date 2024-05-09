@@ -2,98 +2,93 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from PIL import Image, ImageTk
+from database import *
 
-blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+class DonationGUI:
+    def __init__(self, root):
+        self.root = root
+        self.root.geometry("500x500")
+        self.root.title("Make a Donation")
+        self.create_input_frame()
 
+    def create_input_frame(self):
+        self.input_frame = Frame(self.root, bg="white")
+        self.input_frame.pack(expand=True, padx=50, pady=50)
 
-def resize_image(event):
-    # Get the new canvas size
-    new_width = event.width
-    new_height = event.height
-    
-    # Resize the image to fit the canvas
-    resized_image = original_image.resize((new_width, new_height), Image.BICUBIC)
-    photo = ImageTk.PhotoImage(resized_image)
-    canvas.itemconfig(canvas_image, image=photo)
-    canvas.image = photo  # Keep a reference to prevent garbage collection
-    
-    # Resize the rectangle
-    canvas.coords(rectangle, 0, 0, new_width, new_height)
-    
-    # Reposition the input bar
-    reposition_input_bar(new_width, new_height)
+        # Search bar
+        search_label = Label(self.input_frame, text="Search Donor ID:")
+        search_label.grid(row=0, column=0, padx=10, pady=10)
+        self.search_entry = Entry(self.input_frame)
+        self.search_entry.grid(row=0, column=1, padx=10, pady=10)
+        search_button = Button(self.input_frame, text="Search", command=self.search_donation_info)
+        search_button.grid(row=0, column=2, padx=10, pady=10)
 
+        # Example input widgets
+        title_label = Label(self.input_frame, text="Enter Donation Information", font=("Helvetica", 14, "bold"))
+        title_label.grid(row=1, column=0, columnspan=3, pady=10)
 
-def reposition_input_bar(new_width, new_height):
-    # Calculate the center position for the input bar
-    bar_x = new_width // 2 - input_frame.winfo_reqwidth() // 2
-    bar_y = new_height // 2 - input_frame.winfo_reqheight() // 2
-    
-    # Set the new position for the frame containing input widgets
-    input_frame.place(x=bar_x, y=bar_y)
+        label1 = Label(self.input_frame, text="Donor ID:")
+        label1.grid(row=2, column=0, padx=10, pady=10)
+        self.donor_id_entry = Entry(self.input_frame)
+        self.donor_id_entry.grid(row=2, column=1, padx=10, pady=10)
 
-    # Set the new position for the frame containing input widgets
-    input_frame.place(x=bar_x, y=bar_y)
+        label2 = Label(self.input_frame, text="Blood Bank ID:")
+        label2.grid(row=3, column=0, padx=10, pady=10)
+        self.blood_bank_id_entry = Entry(self.input_frame)
+        self.blood_bank_id_entry.grid(row=3, column=1, padx=10, pady=10)
 
-root = Tk()
-root.geometry("500x500")
-root.title("Make a Donation")
+        label3 = Label(self.input_frame, text="Quantity Donated:")
+        label3.grid(row=4, column=0, padx=10, pady=10)
+        self.quantity_donated_entry = Entry(self.input_frame)
+        self.quantity_donated_entry.grid(row=4, column=1, padx=10, pady=10)
 
-# Load the original image
-original_image = Image.open("image/image1.jpg")
+        blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
 
-# Create a Canvas
-canvas = Canvas(root)
-canvas.pack(fill="both", expand=True)
+        label4 = Label(self.input_frame, text="Blood Type:")
+        label4.grid(row=5, column=0, padx=10, pady=10)
+        self.blood_type_combobox = ttk.Combobox(self.input_frame, values=blood_types, state="readonly")  # Create combobox
+        self.blood_type_combobox.current(0)  # Set default value
+        self.blood_type_combobox.grid(row=5, column=1, padx=10, pady=10)
 
-# Bind the resize_image function to the canvas resize event
-canvas.bind("<Configure>", resize_image)
+        label5 = Label(self.input_frame, text="Health Check Info:")
+        label5.grid(row=6, column=0, padx=10, pady=10)
+        self.health_check_information_entry = Entry(self.input_frame)
+        self.health_check_information_entry.grid(row=6, column=1, padx=10, pady=10)
 
-# Resize the canvas to fit the window initially
-width, height = root.winfo_width(), root.winfo_height()
-canvas.config(width=width, height=height)
+        submit_button = Button(self.input_frame, text="Submit", width="15", command=self.submit_donation_info)
+        submit_button.grid(row=7, columnspan=2, pady=10)
 
-# Resize the image to fit the canvas initially
-resized_image = original_image.resize((width, height), Image.BICUBIC)
-photo = ImageTk.PhotoImage(resized_image)
+        # Label to display donation records
+        self.donation_records_label = Label(self.input_frame, text="", wraplength=400, justify="left")
+        self.donation_records_label.grid(row=8, columnspan=3, padx=10, pady=10)
 
-# Create the background image on the canvas
-canvas_image = canvas.create_image(0, 0, anchor=NW, image=photo)
+    def search_donation_info(self):
+        donor_id = self.search_entry.get()
+        if donor_id:
+            donation_records = view_donation(donor_id)
+            if donation_records:
+                records_text = "\n".join([", ".join(map(str, record)) for record in donation_records])
+                self.donation_records_label.config(text="Donation Records:\n" + records_text)
+            else:
+                self.donation_records_label.config(text="No records found for donor ID: " + donor_id)
+        else:
+            self.donation_records_label.config(text="Please enter a donor ID to search for donation records.")
 
-# Create a semi-transparent white rectangle as a watermark
-rectangle = canvas.create_rectangle(0, 0, width, height, fill="white", stipple="gray75")
+    def submit_donation_info(self):
+        donor_id = self.donor_id_entry.get()
+        blood_bank_id = self.blood_bank_id_entry.get()
+        quantity_donated = self.quantity_donated_entry.get()
+        blood_type = self.blood_type_combobox.get()
+        health_check_info = self.health_check_information_entry.get()
 
-# Create a frame for input widgets
-input_frame = Frame(root, bg="white")
+        # Call the function from the practice module to submit the donation info
+        insert_donations(donor_id, blood_bank_id, quantity_donated, blood_type, health_check_info)
+        messagebox.showinfo("Success", "Donation information submitted successfully.")
 
-# Example input widgets
-label1 = Label(input_frame, text="Donor ID:")
-label1.grid(row=0, column=0, padx=10, pady=10)
-entry1 = Entry(input_frame)
-entry1.grid(row=0, column=1, padx=10, pady=10)
+def open_donation_gui():
+    root = Tk()
+    donation_gui = DonationGUI(root)
+    root.mainloop()
 
-label2 = Label(input_frame, text="Blood Bank ID:")
-label2.grid(row=1, column=0, padx=10, pady=10)
-entry2 = Entry(input_frame)
-entry2.grid(row=1, column=1, padx=10, pady=10)
-
-label3 = Label(input_frame, text="Quantity Donated:")
-label3.grid(row=2, column=0, padx=10, pady=10)
-entry3 = Entry(input_frame)
-entry3.grid(row=2, column=1, padx=10, pady=10)
-
-label4 = Label(input_frame, text="Blood Type:")
-label4.grid(row=3, column=0, padx=10, pady=10)
-label4_combobox = ttk.Combobox(input_frame, values=blood_types, state="readonly")  # Create combobox
-label4_combobox.current(0)  # Set default value
-label4_combobox.grid(row=3, column=1, padx=10, pady=10)
-
-label5 = Label(input_frame, text="Health Check Info:")
-label5.grid(row=4, column=0, padx=10, pady=10)
-entry5 = Entry(input_frame)
-entry5.grid(row=4, column=1, padx=10, pady=10)
-
-submit_button = Button(input_frame, text="Submit", width="15")
-submit_button.grid(row=5, columnspan=2, padx=10, pady=10)
-
-root.mainloop()
+if __name__ == "__main__":
+    open_donation_gui()

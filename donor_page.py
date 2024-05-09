@@ -153,3 +153,14 @@ class DonorGUI:
         donor_id_label.grid(row=0, column=0, padx=10, pady=10)
         donor_id_entry = Entry(existing_donor_window)
         donor_id_entry.grid(row=0, column=1, padx=10, pady=10)
+        
+         # Submit Button
+        submit_button = Button(existing_donor_window, text="Submit", command=submit_donor_id)
+        submit_button.grid(row=1, columnspan=2, padx=10, pady=10)
+
+        d_search_label = Label(existing_donor_window, text="Enter Donor ID:")
+        d_search_label.grid(row=2, column=0, padx=10, pady=10)
+        d_search_entry = Entry(existing_donor_window)
+        d_search_entry.grid(row=2, column=1, padx=10, pady=10)
+        delete_button = Button(existing_donor_window, text="Delete", command=lambda: delete_selected_donor())
+        delete_button.grid(row=3, columnspan=2, padx=10, pady=10)

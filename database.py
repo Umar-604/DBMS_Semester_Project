@@ -264,25 +264,6 @@ def before_insert_blood_inventory():
             db.close()
 
 
-def view_donor(donor_id):
-    db = get_db_connection()
-    cursor = db.cursor()
-    try:
-        cursor.execute("SELECT * FROM donors WHERE donor_id = %s", (donor_id))
-        donor_records = cursor.fetchall()
-        if donor_records:
-            for record in donor_records:
-                print(record)  # Or process the records as needed
-        else:
-            print("No records found for donor ID:", donor_id)
-    except psycopg2.Error as e:
-        print("Error viewing donor records:", e)
-    finally:
-        cursor.close()
-        db.close()
-        return donor_records
-
-
 def view_donation(donor_id):
     db = get_db_connection()
     cursor = db.cursor()
@@ -305,7 +286,7 @@ def view_receiver(recipient_id):
     db = get_db_connection()
     cursor = db.cursor()
     try:
-        cursor.execute("SELECT * FROM recipients WHERE receipient_id = %s", (recipient_id))
+        cursor.execute("SELECT * FROM recipients WHERE recipient_id = %s", (recipient_id))
         receiver_records = cursor.fetchall()
         if receiver_records:
             for record in receiver_records:
@@ -381,6 +362,18 @@ def delete_donor(donor_id):
         db.commit()  # Don't forget to commit the transaction
     except Exception as e:
         print("Error deleting donor:", e)
+    finally:
+        cursor.close()
+        db.close()
+
+def delete_receiver(recipient_id):
+    db = get_db_connection()
+    cursor = db.cursor()
+    try:
+        cursor.execute("DELETE FROM recipients WHERE recipient_id = %s", (recipient_id,))
+        db.commit()  # Don't forget to commit the transaction
+    except Exception as e:
+        print("Error deleting recipient:", e)
     finally:
         cursor.close()
         db.close()

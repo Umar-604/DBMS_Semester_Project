@@ -6,6 +6,7 @@ from database import *
 class ReceiverGUI:
     def __init__(self, root):
         self.receiver_options_window = root
+        self.receiver_id_entry = None  # Define receiver_id_entry as a class attribute
         
         # Create the receiver options window
         self.receiver_options_window.title("Receiver Options")
@@ -50,8 +51,8 @@ class ReceiverGUI:
         # Receiver ID
         receiver_id_label = Label(new_receiver_window, text="Receiver ID:")
         receiver_id_label.grid(row=0, column=0, padx=10, pady=10)
-        receiver_id_entry = Entry(new_receiver_window)
-        receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
+        self.receiver_id_entry = Entry(new_receiver_window)  # Assign to class attribute
+        self.receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
         # Name
         name_label = Label(new_receiver_window, text="Name:")
@@ -98,7 +99,7 @@ class ReceiverGUI:
         healthcare_facility_entry.grid(row=8, column=1, padx=10, pady=10)
 
          # Submit Button
-        submit_button = Button(new_receiver_window, text="Submit", command=lambda: submit_receiver_info(receiver_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_condition_entry, healthcare_facility_entry))
+        submit_button = Button(new_receiver_window, text="Submit", command=lambda: submit_receiver_info(self.receiver_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_condition_entry, healthcare_facility_entry))
         submit_button.grid(row=9, columnspan=2, padx=10, pady=10)
 
     def existing_receiver_window(self):
@@ -112,26 +113,67 @@ class ReceiverGUI:
 
         # Function to handle the submission of receiver ID
         def submit_receiver_id():
-            receiver_id = receiver_id_entry.get()
-            receiver_records = view_receiver(receiver_id)
-            if receiver_records:
-                # Convert receiver records to a string
-                records_text = ""
+            recipient_id = self.receiver_id_entry.get()  # Access class attribute
+            receiver_records = view_receiver(recipient_id)
+
+            if receiver_records:  # Check if data is returned
+                # Create Treeview widget
+                tree = ttk.Treeview(existing_receiver_window)
+                
+                # Define columns
+                tree["columns"] = ("Recipient ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health Condition", "Healthcare/Hospital")
+                
+                # Column headings
+                for column in tree["columns"]:
+                    tree.heading(column, text=column)
+                
+                # Insert data
                 for record in receiver_records:
-                    records_text += ", ".join(str(field) for field in record) + "\n"
-                receiver_records_label.config(text=records_text)
+                    tree.insert("", "end", values=record)
+                
+                # Display Treeview
+                tree.grid(row=6, columnspan=2, padx=10, pady=10, sticky="nsew")
+                
+                # Adjust column spacing
+                for col in tree["columns"]:
+                    tree.column(col, width=120, anchor="center")  # Adjust width as needed
+                
+                # Add scrollbar
+                scrollbar = ttk.Scrollbar(existing_receiver_window, orient="vertical", command=tree.yview)
+                scrollbar.grid(row=6, column=2, sticky="ns")
+                tree.configure(yscrollcommand=scrollbar.set)
             else:
-                receiver_records_label.config(text="No records found for receiver ID: " + receiver_id)
+                messagebox.showinfo("No Records", "No records found for recipient ID: " + recipient_id)
+
+        def delete_selected_donor():
+            recipient_id = r_search_entry.get()  # Get the donor ID from the entry
+            receiver_records = view_receiver(recipient_id)
+
+            if receiver_records:
+                delete_receiver(recipient_id)
+                messagebox.showinfo("Deletion", "The record is deleted ")
+            else:  
+                messagebox.showinfo("No Records", "No records found for recipient ID: " + recipient_id)
 
         # Receiver ID
         receiver_id_label = Label(existing_receiver_window, text="Receiver ID:")
         receiver_id_label.grid(row=0, column=0, padx=10, pady=10)
-        receiver_id_entry = Entry(existing_receiver_window)
-        receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
+        self.receiver_id_entry = Entry(existing_receiver_window)  # Assign to class attribute
+        self.receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
         # Submit Button
         submit_button = Button(existing_receiver_window, text="Submit", command=submit_receiver_id)
         submit_button.grid(row=1, columnspan=2, padx=10, pady=10)
+
+        r_search_label = Label(existing_receiver_window, text="Enter Recipient ID:")
+        r_search_label.grid(row=2, column=0, padx=10, pady=10)
+        r_search_entry = Entry(existing_receiver_window)
+        r_search_entry.grid(row=2, column=1, padx=10, pady=10)
+        delete_button = Button(existing_receiver_window, text="Delete", command=lambda: delete_selected_donor())
+        delete_button.grid(row=3, columnspan=2, padx=10, pady=10)
+
+        # Adjust spacing for input bar labels
+        existing_receiver_window.grid_rowconfigure(4, minsize=20)
 
 # Main Tkinter window
 def open_receiver_gui():

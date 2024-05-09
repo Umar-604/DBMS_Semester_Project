@@ -1,17 +1,16 @@
-from itertools import tee
 from tkinter import *
 from tkinter import messagebox
-from tkinter import ttk  
+from tkinter import ttk  # Import ttk module for themed widgets
 from database import *
 
 class DonorGUI:
-    def _init_(self, root):
+    def __init__(self, root):
         self.donation_options_window = root
-
+        
         # Create the donation options window
         self.donation_options_window.title("Donation Options")
         self.donation_options_window.geometry("500x500")
-        
+
         # New Donor button
         new_donor_button = Button(self.donation_options_window, text="New Donor", command=lambda: self.on_option_click("New Donor"))
         new_donor_button.pack(pady=10)
@@ -23,7 +22,12 @@ class DonorGUI:
         self.blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
         self.gender_types = ["Male", "Female", "None"]
 
-
+    def on_option_click(self, option):
+        if option == "New Donor":
+            self.new_donor_window()
+        elif option == "Existing Donor":
+            self.existing_donor_window()
+    
     def new_donor_window(self):
         new_donor_window = Toplevel()
         new_donor_window.title("New Donor Information")
@@ -96,65 +100,67 @@ class DonorGUI:
         # Submit Button
         submit_button = Button(new_donor_window, text="Submit", command=lambda: submit_donor_info(donor_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry))
         submit_button.grid(row=8, columnspan=2, padx=10, pady=10)
-        
+
     def existing_donor_window(self):
         existing_donor_window = Toplevel()
         existing_donor_window.title("Existing Donor Information")
         existing_donor_window.geometry("500x500")
-        
+
         # Rest of the code for the existing donor window...
         donor_records_label = Label(existing_donor_window, text="", wraplength=280, justify=LEFT)
         donor_records_label.grid(row=5, columnspan=2, padx=10, pady=10)
-        
+
         # Function to handle the submission of donor ID
-    def submit_donor_id():
-        donor_id = donor_id_entry.get()
-        donor_records = view_donor(donor_id)
-        if donor_records:
-        # Create Treeview widget
-            tree = ttk.Treeview(existing_donor_window)
-          
-           # Define columns
-            tree["columns"] = ("Donor ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health History", "Last Donation Date")
+        def submit_donor_id():
+            donor_id = donor_id_entry.get()
+            donor_records = view_donor(donor_id)
+            if donor_records:
+                # Create Treeview widget
+                tree = ttk.Treeview(existing_donor_window)
                 
-        # Column headings
-            tree.heading("#0")
-            for column in tee["columns"]:
-             tee.heading(column, text=column)
-            
-         # Insert data
-            for record in donor_records:
-                    tee.insert("", "end", values=record)
-     # Display Treeview
-            tee.grid(row=6, columnspan=2, padx=10, pady=10, sticky="nsew")
+                # Define columns
+                tree["columns"] = ("Donor ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health History", "Last Donation Date")
+                
+                # Column headings
+                tree.heading("#0")
+                for column in tree["columns"]:
+                    tree.heading(column, text=column)
+                
+                # Insert data
+                for record in donor_records:
+                    tree.insert("", "end", values=record)
+                
+                # Display Treeview
+                tree.grid(row=6, columnspan=2, padx=10, pady=10, sticky="nsew")
                 
                 # Adjust column spacing
-            for col in tee["columns"]:
-                    tee.column(col, width=120, anchor="center")  # Adjust width as needed
+                for col in tree["columns"]:
+                    tree.column(col, width=120, anchor="center")  # Adjust width as needed
                 
- # Add scrollbar
-            scrollbar = ttk.Scrollbar(existing_donor_window, orient="vertical", command=tree.yview)
-            scrollbar.grid(row=6, column=2, sticky="ns")
-            tee.configure(yscrollcommand=scrollbar.set)
-        else:
+                # Add scrollbar
+                scrollbar = ttk.Scrollbar(existing_donor_window, orient="vertical", command=tree.yview)
+                scrollbar.grid(row=6, column=2, sticky="ns")
+                tree.configure(yscrollcommand=scrollbar.set)
+            else:
                 messagebox.showinfo("No Records", "No records found for donor ID: " + donor_id)
 
-                def delete_selected_donor():
-                    donor_id = d_search_entry.get()  # Get the donor ID from the entry
-                    donor_records = view_donor(donor_id)
+        def delete_selected_donor():
+            donor_id = d_search_entry.get()  # Get the donor ID from the entry
+            donor_records = view_donor(donor_id)
 
-        if donor_records:
+            if donor_records:
                 delete_donor(donor_id)
-        else:  
+                messagebox.showinfo("Deletion", "The record is deleted ")
+            else:  
                 messagebox.showinfo("No Records", "No records found for donor ID: " + donor_id)
-                
+
         # Donor ID
         donor_id_label = Label(existing_donor_window, text="Donor ID:")
         donor_id_label.grid(row=0, column=0, padx=10, pady=10)
         donor_id_entry = Entry(existing_donor_window)
         donor_id_entry.grid(row=0, column=1, padx=10, pady=10)
-        
-         # Submit Button
+
+        # Submit Button
         submit_button = Button(existing_donor_window, text="Submit", command=submit_donor_id)
         submit_button.grid(row=1, columnspan=2, padx=10, pady=10)
 
@@ -164,8 +170,8 @@ class DonorGUI:
         d_search_entry.grid(row=2, column=1, padx=10, pady=10)
         delete_button = Button(existing_donor_window, text="Delete", command=lambda: delete_selected_donor())
         delete_button.grid(row=3, columnspan=2, padx=10, pady=10)
-        
-# Adjust spacing for input bar labels
+
+        # Adjust spacing for input bar labels
         existing_donor_window.grid_rowconfigure(4, minsize=20)
 
 # Main Tkinter window
@@ -174,5 +180,5 @@ def open_donor_gui():
     donation_gui = DonorGUI(root)
     root.mainloop()
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     open_donor_gui()

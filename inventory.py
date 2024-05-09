@@ -86,3 +86,12 @@ class Inventory:
             self.tree.configure(yscrollcommand=scrollbar.set)
         else:
             messagebox.showinfo("No Records", "No records found for blood type: " + blood_type)
+
+# Main Tkinter window
+def open_inventory():
+    root = Tk()
+    inventory_page = Inventory(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    open_inventory()

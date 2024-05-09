@@ -164,3 +164,15 @@ class DonorGUI:
         d_search_entry.grid(row=2, column=1, padx=10, pady=10)
         delete_button = Button(existing_donor_window, text="Delete", command=lambda: delete_selected_donor())
         delete_button.grid(row=3, columnspan=2, padx=10, pady=10)
+        
+# Adjust spacing for input bar labels
+        existing_donor_window.grid_rowconfigure(4, minsize=20)
+
+# Main Tkinter window
+def open_donor_gui():
+    root = Tk()
+    donation_gui = DonorGUI(root)
+    root.mainloop()
+
+if __name__ == "_main_":
+    open_donor_gui()

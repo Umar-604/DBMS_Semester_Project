@@ -133,3 +133,12 @@ def existing_receiver_window(self):
         # Submit Button
         submit_button = Button(existing_receiver_window, text="Submit", command=submit_receiver_id)
         submit_button.grid(row=1, columnspan=2, padx=10, pady=10)
+
+# Main Tkinter window
+def open_receiver_gui():
+    root = Tk()
+    donation_gui =  receiverGUI(root)
+    root.mainloop()
+
+if _name_ == "_main_":
+    open_receiver_gui()

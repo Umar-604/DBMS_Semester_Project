@@ -152,7 +152,7 @@ left_frame.pack_propagate(0)  # Prevent the frame from resizing
 # Image
 image_path = "image/front.jpeg"
 image = Image.open(image_path)
-image = image.resize((600, 750), Image.BICUBIC)  # Increase the size of the image
+image = image.resize((600, 750))  # Increase the size of the image
 image = ImageTk.PhotoImage(image)
 image_label = Label(left_frame, image=image, bg="red")
 image_label.image = image

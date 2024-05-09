@@ -19,18 +19,18 @@ class ReceiverGUI:
         new_receiver_window.geometry("400x400")
 
         # Rest of the code for the new receiver window...
-        def submit_reciever_info(reciever_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry):
+        def submit_reciever_info(reciever_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_Condition_entry, last_donation_date_entry):
             receiver_id = reciever_id_entry.get()
             name = name_entry.get()
             contact = contact_entry.get()
             blood_type = blood_type_combobox.get()  # Getting the selected blood type from the combobox
             dob = dob_entry.get()
             gender = gender_combobox.get()
-            health_history = health_history_entry.get()
+            health_Condition = health_Condition_entry.get()
             last_donation_date = last_donation_date_entry.get()
 
-            insert_receiver(receiver_id, name, contact, blood_type, dob, gender, health_history, last_donation_date)
-            messagebox.showinfo("receiver Information", f"receiver ID: {receiver_id}\nName: {name}\nContact: {contact}\nBlood Type: {blood_type}\nDate of Birth: {dob}\nGender: {gender}\nHealth History: {health_history}\nLast Donation Date: {last_donation_date}")
+            insert_receiver(receiver_id, name, contact, blood_type, dob, gender, health_Condition, last_donation_date)
+            messagebox.showinfo("receiver Information", f"receiver ID: {receiver_id}\nName: {name}\nContact: {contact}\nBlood Type: {blood_type}\nDate of Birth: {dob}\nGender: {gender}\nHealth Condition: {health_Condition}\nLast Donation Date: {last_donation_date}")
 
         # receiver ID
         receiver_id_label = Label(new_receiver_window, text="receiver ID:")
@@ -70,11 +70,11 @@ class ReceiverGUI:
         dob_entry = Entry(new_receiver_window)
         dob_entry.grid(row=5, column=1, padx=10, pady=10)
 
-         # Health History
-        health_history_label = Label(new_receiver_window, text="Health History:")
-        health_history_label.grid(row=6, column=0, padx=10, pady=10)
-        health_history_entry = Entry(new_receiver_window)
-        health_history_entry.grid(row=6, column=1, padx=10, pady=10)
+         # Health Condition
+        health_Condition_label = Label(new_receiver_window, text="Health Condition:")
+        health_Condition_label.grid(row=6, column=0, padx=10, pady=10)
+        health_Condition_entry = Entry(new_receiver_window)
+        health_Condition_entry.grid(row=6, column=1, padx=10, pady=10)
 
         # Hospital/Healthcare Facility
         healthcare_facility_label = Label(new_receiver_window, text="Hospital/Healthcare Facility:")
@@ -83,7 +83,7 @@ class ReceiverGUI:
         healthcare_facility_entry.grid(row=8, column=1, padx=10, pady=10)
 
          # Submit Button
-        submit_button = Button(new_receiver_window, text="Submit", command=lambda: submit_receiver_info(receiver_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry))
+        submit_button = Button(new_receiver_window, text="Submit", command=lambda: submit_receiver_info(receiver_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_Condition_entry, last_donation_date_entry))
         submit_button.grid(row=8, columnspan=2, padx=10, pady=10)
 
 

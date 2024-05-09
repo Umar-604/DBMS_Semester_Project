@@ -34,15 +34,7 @@ def insert_donor(donor_id, name, contact, blood_type, date_of_birth, gender, hea
             db.close()
 
 # Function to recieve donor data into the database
-def insert_receiver():
-    recipent_id=input("Enter recipent ID:")
-    name=input("Enter name:")
-    contact=input("Enter contact number:")
-    blood_type=input("Enter blood type:")
-    date_of_birth=input("Enter date of birth(YYYY-MM-DD):")
-    gender=input("Enter gender:")
-    health_history=input("Enter health history:")
-    hospital=input("Enter hospitals name:")
+def insert_receiver(recipent_id, name, contact, blood_type, date_of_birth, gender, health_history, hospital):
     db=get_db_connection()
     if db:
         try:
@@ -308,6 +300,24 @@ def view_donation(donor_id):
         cursor.close()
         db.close()
         return donation_records
+    
+def view_receiver(recipient_id):
+    db = get_db_connection()
+    cursor = db.cursor()
+    try:
+        cursor.execute("SELECT * FROM recipients WHERE receipient_id = %s", (recipient_id))
+        receiver_records = cursor.fetchall()
+        if receiver_records:
+            for record in receiver_records:
+                print(record)  # Or process the records as needed
+        else:
+            print("No records found for receiver ID:", recipient_id)
+    except psycopg2.Error as e:
+        print("Error viewing receiver records:", e)
+    finally:
+        cursor.close()
+        db.close()
+        return receiver_records
 
 
 def view_table_data(table_name):

@@ -76,6 +76,12 @@ class ReceiverGUI:
         health_history_entry = Entry(new_receiver_window)
         health_history_entry.grid(row=6, column=1, padx=10, pady=10)
 
+        # Hospital/Healthcare Facility
+        healthcare_facility_label = Label(new_receiver_window, text="Hospital/Healthcare Facility:")
+        healthcare_facility_label.grid(row=8, column=0, padx=10, pady=10)
+        healthcare_facility_entry = Entry(new_receiver_window)
+        healthcare_facility_entry.grid(row=8, column=1, padx=10, pady=10)
+
          # Submit Button
         submit_button = Button(new_receiver_window, text="Submit", command=lambda: submit_receiver_info(receiver_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_history_entry, last_donation_date_entry))
         submit_button.grid(row=8, columnspan=2, padx=10, pady=10)

@@ -372,7 +372,19 @@ def view_donor(donor_id):
         cursor.close()
         db.close()
         return donor_records
-    
+
+def delete_donor(donor_id):
+    db = get_db_connection()
+    cursor = db.cursor()
+    try:
+        cursor.execute("DELETE FROM donors WHERE donor_id = %s", (donor_id,))
+        db.commit()  # Don't forget to commit the transaction
+    except Exception as e:
+        print("Error deleting donor:", e)
+    finally:
+        cursor.close()
+        db.close()
+        
 def view_table_data(table_name):
     db = get_db_connection()
     cursor = db.cursor()

@@ -112,6 +112,10 @@ class DonorGUI:
         if donor_records:
         # Create Treeview widget
           tree = ttk.Treeview(existing_donor_window)
+          
+           # Define columns
+        tree["columns"] = ("Donor ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health History", "Last Donation Date")
+                
 
 
     

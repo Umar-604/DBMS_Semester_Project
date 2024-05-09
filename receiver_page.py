@@ -7,6 +7,12 @@ class ReceiverGUI:
     def __init__(self, root):
         self.receiver_options_window = root
         
+    def on_option_click(self, option):
+        if option == "New Receiver":
+            self.new_receiver_window()
+        elif option == "Existing Receiver":
+            self.existing_receiver_window()
+
         # Create the donation options window
         self.receiver_options_window.title("Receiver Options")
         self.receiver_options_window.geometry("500x500")

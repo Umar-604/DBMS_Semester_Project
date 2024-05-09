@@ -10,6 +10,7 @@ class DonationGUI:
         self.root.geometry("500x500")
         self.root.title("Make a Donation")
         self.create_input_frame()
+        
 
     def create_input_frame(self):
         self.input_frame = Frame(self.root, bg="white")

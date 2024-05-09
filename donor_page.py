@@ -125,4 +125,10 @@ class DonorGUI:
          # Insert data
             for record in donor_records:
                     tee.insert("", "end", values=record)
-    
+     # Display Treeview
+            tee.grid(row=6, columnspan=2, padx=10, pady=10, sticky="nsew")
+                
+                # Adjust column spacing
+            for col in tee["columns"]:
+                    tee.column(col, width=120, anchor="center")  # Adjust width as needed
+                

@@ -70,6 +70,12 @@ class ReceiverGUI:
         dob_entry = Entry(new_receiver_window)
         dob_entry.grid(row=5, column=1, padx=10, pady=10)
 
+         # Health History
+        health_history_label = Label(new_receiver_window, text="Health History:")
+        health_history_label.grid(row=6, column=0, padx=10, pady=10)
+        health_history_entry = Entry(new_receiver_window)
+        health_history_entry.grid(row=6, column=1, padx=10, pady=10)
+
 
 
         # Create the donation options window

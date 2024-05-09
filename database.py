@@ -34,14 +34,14 @@ def insert_donor(donor_id, name, contact, blood_type, date_of_birth, gender, hea
             db.close()
 
 # Function to recieve donor data into the database
-def insert_receiver(recipent_id, name, contact, blood_type, date_of_birth, gender, health_history, hospital):
+def insert_receiver(recipent_id, name, contact, blood_type, date_of_birth, gender, health_condition, hospital):
     db=get_db_connection()
     if db:
         try:
             cursor =db.cursor()
-            insert_query="""INSERT INTO recipients(recipient_id, name, contact, blood_type, date_of_birth, gender, health_history, hospital)
+            insert_query="""INSERT INTO recipients(recipient_id, name, contact, blood_type, date_of_birth, gender, health_condition, hospital)
                               VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"""
-            cursor.execute(insert_query, (recipent_id, name, contact, blood_type, date_of_birth, gender, health_history, hospital))
+            cursor.execute(insert_query, (recipent_id, name, contact, blood_type, date_of_birth, gender, health_condition, hospital))
             db.commit()
             print("Receiver's data inserted successfully!")
         except psycopg2.Error as e:

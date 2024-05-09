@@ -23,4 +23,24 @@ class Inventory:
         search_button = Button(self.inventory, text="Search by Blood Type", command=self.search_inventory_by_blood_type)
         search_button.pack(pady=5)
 
+    def view_all_records_inventory(self):
+        # Clear previous records
+        if self.tree:
+            self.tree.destroy()
 
+        # Get all inventory records
+        inventory_records = view_all_inventory()
+        if inventory_records:
+            self.tree = ttk.Treeview(self.inventory, show="headings", selectmode="browse")
+            
+            # Define columns
+            self.tree["columns"] = ("Blood Bank ID", "Blood Type", "Quantity Available", "Expiry date", "Donor ID", "Serial No")
+            
+            # Column headings
+            for column in self.tree["columns"]:
+                self.tree.heading(column, text=column)
+                self.tree.column(column, width=120, anchor="center")  # Adjust width as needed
+            
+            # Insert data
+            for record in inventory_records:
+                self.tree.insert("", "end", values=record)

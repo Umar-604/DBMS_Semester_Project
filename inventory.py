@@ -64,3 +64,12 @@ class Inventory:
         inventory_records = view_inventory(blood_type)
         if inventory_records:
             self.tree = ttk.Treeview(self.inventory, show="headings", selectmode="browse")
+            
+            # Define columns
+            self.tree["columns"] = ("Blood Bank ID", "Blood Type", "Quantity Available", "Expiry date", "Donor ID", "Serial No")
+            
+            # Column headings
+            for column in self.tree["columns"]:
+                self.tree.heading(column, text=column)
+                self.tree.column(column, width=120, anchor="center")  # Adjust width as needed
+            

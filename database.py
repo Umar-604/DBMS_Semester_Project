@@ -318,6 +318,24 @@ def view_receiver(recipient_id):
         cursor.close()
         db.close()
         return receiver_records
+    
+def view_all_inventory():
+    db = get_db_connection()
+    cursor = db.cursor()
+    try:
+        cursor.execute("SELECT * FROM blood_inventory")
+        inventory_records = cursor.fetchall()
+        if inventory_records:
+            for record in inventory_records:
+                print(record)  # Or process the records as needed
+        else:
+            print("No records found:")
+    except psycopg2.Error as e:
+        print("Error viewing Inventory records:", e)
+    finally:
+        cursor.close()
+        db.close()
+        return inventory_records
 
 
 def view_table_data(table_name):

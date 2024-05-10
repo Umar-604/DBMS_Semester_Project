@@ -52,14 +52,7 @@ def insert_receiver(recipent_id, name, contact, blood_type, date_of_birth, gende
             cursor.close()
             db.close()
 
-def insert_blood_bank():
-    blood_bank_id = input("Enter blood bank ID : ")
-    name = input("Enter name of blood bank : ")
-    location = input("Enter location of blood bank : ")
-    contact = input("Enter contact info of blood bank :")
-    services_provided = input("Enter the services provided by blood bank : ")
-    operating_hours = input("Enter operating hours : ")
-
+def insert_blood_bank(blood_bank_id, name, location, contact, services_provided, operating_hours):
     db = get_db_connection()
     if db:
         try:

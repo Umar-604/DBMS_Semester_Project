@@ -234,8 +234,6 @@ def before_insert_blood_inventory():
                         RAISE EXCEPTION 'Past Expiry date';
                     END IF;
 
-
-
                     RETURN NEW;
                 END;
                 $$ LANGUAGE plpgsql;
@@ -422,21 +420,3 @@ def delete_bank(blood_bank_id):
         cursor.close()
         db.close()
         
-def view_table_data(table_name):
-    db = get_db_connection()
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM {}".format(table_name))
-    rows = cursor.fetchall()
-    db.close()
-    return rows
-#table_name = input("Enter table name : ")
-#data = view_donor_data(table_name)
-#for row in data:
- #   print(row)            
-# Call the insert_donor function
-# insert_donor()
-# insert_receiver()
-# insert_blood_bank()
-# insert_donations()
-# insert_blood_bank()
-# insert_blood_inventory()

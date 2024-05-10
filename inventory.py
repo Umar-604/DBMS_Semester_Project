@@ -66,7 +66,7 @@ class Inventory:
             self.tree = ttk.Treeview(self.inventory, show="headings", selectmode="browse")
             
             # Define columns
-            self.tree["columns"] = ("Blood Bank ID", "Blood Type", "Quantity Available", "Expiry date", "Donor ID", "Serial No")
+            self.tree["columns"] = ("Blood Bank ID", "Total Quantity")
             
             # Column headings
             for column in self.tree["columns"]:

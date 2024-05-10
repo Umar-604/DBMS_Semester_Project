@@ -293,6 +293,24 @@ def view_receiver(recipient_id):
         db.close()
         return receiver_records
     
+def view_bank(blood_bank_id):
+    db = get_db_connection()
+    cursor = db.cursor()
+    try:
+        cursor.execute("SELECT * FROM blood_banks WHERE blood_bank_id = %s", (blood_bank_id))
+        bank_records = cursor.fetchall()
+        if bank_records:
+            for record in bank_records:
+                print(record)  # Or process the records as needed
+        else:
+            print("No records found for Blood Bank ID:", blood_bank_id)
+    except psycopg2.Error as e:
+        print("Error viewing blood bank records:", e)
+    finally:
+        cursor.close()
+        db.close()
+        return bank_records
+    
 def view_all_inventory():
     db = get_db_connection()
     cursor = db.cursor()

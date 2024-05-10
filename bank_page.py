@@ -192,7 +192,6 @@ class BankGUI:
         view_all_button = Button(view_bank_window, text="View All Banks", command=view_all_records_bank)
         view_all_button.grid(row=4, columnspan=2, padx=10, pady=10)
 
-        
 
 def open_bank_gui():
     root = Tk()

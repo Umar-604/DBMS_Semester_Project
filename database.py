@@ -351,7 +351,9 @@ def view_inventory(blood_type):
     db = get_db_connection()
     cursor = db.cursor()
     try:
-        cursor.execute("SELECT * FROM blood_inventory WHERE blood_type = %s", (blood_type,))
+        cursor.execute("""SELECT blood_bank_id, SUM(quantity_available) AS total_quantity_available FROM blood_inventory 
+                        WHERE blood_type = %s 
+                        GROUP BY blood_bank_id""", (blood_type,))
         inventory_records = cursor.fetchall()
         if inventory_records:
             for record in inventory_records:
@@ -364,6 +366,7 @@ def view_inventory(blood_type):
         cursor.close()
         db.close()
         return inventory_records
+
 
 def view_donor(donor_id):
     db = get_db_connection()

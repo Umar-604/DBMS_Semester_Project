@@ -185,6 +185,9 @@ button2.pack(pady=10)
 button3 = Button(option_frame, text="Make a Donation", command=lambda: on_button_click())
 button3.pack(pady=10)
 
+button4 = Button(option_frame, text="Blood Bank", command=lambda: on_button_click())
+button4.pack(pady=10)
+
 # List of blood types and genders
 blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
 gender_types = ["Male", "Female", "None"]

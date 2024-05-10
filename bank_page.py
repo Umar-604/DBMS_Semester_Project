@@ -42,6 +42,7 @@ class BankGUI:
             operating_hours = operating_hours_entry.get()
 
             insert_blood_bank(blood_bank_id, name, location, contact, services_provided, operating_hours)
+            insert_blood_bank_firebase(blood_bank_id, name, location, contact, services_provided, operating_hours)
             messagebox.showinfo("Blood Bank Information", "Data inserted successfully")
 
         # Blood Bank ID

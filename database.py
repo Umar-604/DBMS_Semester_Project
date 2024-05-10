@@ -1,14 +1,18 @@
 import psycopg2
 import firebase_admin
 from firebase_admin import credentials, firestore
-from firebase_admin import db
+from firebase_admin import db as firebase_db
 
 
 # Initialize Firebase with your credentials file
-def initialize_firebase():
-    cred = credentials.Certificate("serviceAccountKey.json")  # Path to your service account key JSON file
+cred = credentials.Certificate('serviceAccountKey.json')
+
+try:
     firebase_admin.initialize_app(cred)
-    db_firestore = firestore.client()
+    db = firestore.client()  # Initialize Firestore client
+except ValueError:
+    # If Firebase Admin SDK is already initialized, retrieve the default app
+    pass
 
 
 # Function to establish a connection to the database
@@ -52,16 +56,20 @@ def insert_donor(donor_id, name, contact, blood_type, date_of_birth, gender, hea
 # Function to insert donor data into Firebase Realtime Database
 def insert_donor_firebase(donor_id, name, contact, blood_type, date_of_birth, gender, health_history,
                           last_donation_date):
-    ref = db.reference('donors')  # Reference to the 'donors' node in your Firebase database
-    ref.child(donor_id).set({
-        'name': name,
-        'contact': contact,
-        'blood_type': blood_type,
-        'date_of_birth': date_of_birth,
-        'gender': gender,
-        'health_history': health_history,
-        'last_donation_date': last_donation_date
-    })
+    try:
+        collection_ref = db.collection('donors')  # Reference to the 'donors' node in your Firebase database
+        new_doc_ref = collection_ref.add({
+            'name': name,
+            'contact': contact,
+            'blood_type': blood_type,
+            'date_of_birth': date_of_birth,
+            'gender': gender,
+            'health_history': health_history,
+            'last_donation_date': last_donation_date
+        })
+        print("Donor's data inserted successfully with ID:", new_doc_ref.id)
+    except Exception as e:
+        print("Error inserting donor data:", e)
 
 
 # Function to recieve donor data into the database

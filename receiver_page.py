@@ -46,6 +46,7 @@ class ReceiverGUI:
             healthcare_facility = healthcare_facility_entry.get()
 
             insert_receiver(receiver_id, name, contact, blood_type, dob, gender, health_condition, healthcare_facility)
+            insert_receiver_firebase(receiver_id, name, contact, blood_type, dob, gender, health_condition, healthcare_facility)
             messagebox.showinfo("Receiver Information", f"Receiver ID: {receiver_id}\nName: {name}\nContact: {contact}\nBlood Type: {blood_type}\nDate of Birth: {dob}\nGender: {gender}\nHealth Condition: {health_condition}\nHealthcare Facility: {healthcare_facility}")
 
         # Receiver ID

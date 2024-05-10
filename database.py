@@ -59,6 +59,7 @@ def insert_donor_firebase(donor_id, name, contact, blood_type, date_of_birth, ge
     try:
         collection_ref = db.collection('donors')  # Reference to the 'donors' node in your Firebase database
         new_doc_ref = collection_ref.add({
+            'donor_id': donor_id,
             'name': name,
             'contact': contact,
             'blood_type': blood_type,
@@ -67,7 +68,7 @@ def insert_donor_firebase(donor_id, name, contact, blood_type, date_of_birth, ge
             'health_history': health_history,
             'last_donation_date': last_donation_date
         })
-        print("Donor's data inserted successfully with ID:", new_doc_ref.id)
+        print("Donor's data inserted successfully with ID:", donor_id)
     except Exception as e:
         print("Error inserting donor data:", e)
 
@@ -102,6 +103,7 @@ def insert_receiver_firebase(recipient_id, name, contact, blood_type, date_of_bi
     try:
         collection_ref = db.collection('receivers')  # Reference to the 'donors' node in your Firebase database
         new_doc_ref = collection_ref.add({
+            'recipient_id': recipient_id,
             'name': name,
             'contact': contact,
             'blood_type': blood_type,
@@ -110,7 +112,7 @@ def insert_receiver_firebase(recipient_id, name, contact, blood_type, date_of_bi
             'health_condition': health_condition,
             'hospital': hospital
         })
-        print("Receiver's data inserted successfully with ID:", new_doc_ref.id)
+        print("Receiver's data inserted successfully with ID:", recipient_id)
     except Exception as e:
         print("Error inserting receiver data:", e)
 

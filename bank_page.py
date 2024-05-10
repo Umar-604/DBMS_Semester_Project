@@ -83,3 +83,76 @@ class BankGUI:
         # Submit Button
         submit_button = Button(new_bank_window, text="Submit", command=lambda: submit_bank_info(blood_bank_id_entry, name_entry, location_entry, contact_entry, services_provided_combobox, operating_hours_entry))
         submit_button.grid(row=8, columnspan=2, padx=10, pady=10)
+
+    def view_bank_window(self):
+        view_bank_window = Toplevel()
+        view_bank_window.title("Banks Information")
+        view_bank_window.geometry("500x500")
+
+        # Rest of the code for the existing donor window...
+        bank_records_label = Label(view_bank_window, text="", wraplength=280, justify=LEFT)
+        bank_records_label.grid(row=5, columnspan=2, padx=10, pady=10)
+
+        # Function to handle the submission of donor ID
+        def submit_bank_id():
+            blood_bank_id = blood_bank_id_entry.get()
+            bank_records = view_bank(blood_bank_id)
+            if bank_records:
+                # Create Treeview widget
+                tree = ttk.Treeview(view_bank_window)
+                
+                # Define columns
+                tree["columns"] = ("Blood Bank ID", "Name", "Location", "Contact Information", "Services Provided", "Operating Hours")
+                
+                # Column headings
+                tree.heading("#0")
+                for column in tree["columns"]:
+                    tree.heading(column, text=column)
+                
+                # Insert data
+                for record in bank_records:
+                    tree.insert("", "end", values=record)
+                
+                # Display Treeview
+                tree.grid(row=6, columnspan=2, padx=10, pady=10, sticky="nsew")
+                
+                # Adjust column spacing
+                for col in tree["columns"]:
+                    tree.column(col, width=120, anchor="center")  # Adjust width as needed
+                
+                # Add scrollbar
+                scrollbar = ttk.Scrollbar(view_bank_window, orient="vertical", command=tree.yview)
+                scrollbar.grid(row=6, column=2, sticky="ns")
+                tree.configure(yscrollcommand=scrollbar.set)
+            else:
+                messagebox.showinfo("No Records", "No records found for Blood Bank ID: " + blood_bank_id)
+
+        def delete_selected_bank():
+            blood_bank_id = b_search_entry.get()  # Get the donor ID from the entry
+            bank_records = view_bank(blood_bank_id)
+
+            if bank_records:
+                delete_bank(blood_bank_id)
+                messagebox.showinfo("Deletion", "The record is deleted ")
+            else:  
+                messagebox.showinfo("No Records", "No records found for Blood Bank ID: " + blood_bank_id)
+
+        # Donor ID
+        blood_bank_id_label = Label(view_bank_window, text="Blood Bank ID:")
+        blood_bank_id_label.grid(row=0, column=0, padx=10, pady=10)
+        blood_bank_id_entry = Entry(view_bank_window)
+        blood_bank_id_entry.grid(row=0, column=1, padx=10, pady=10)
+
+        # Submit Button
+        submit_button = Button(view_bank_window, text="Submit", command=submit_bank_id)
+        submit_button.grid(row=1, columnspan=2, padx=10, pady=10)
+
+        b_search_label = Label(view_bank_window, text="Enter Blood Bank ID:")
+        b_search_label.grid(row=2, column=0, padx=10, pady=10)
+        b_search_entry = Entry(view_bank_window)
+        b_search_entry.grid(row=2, column=1, padx=10, pady=10)
+        delete_button = Button(view_bank_window, text="Delete", command=lambda: delete_selected_bank())
+        delete_button.grid(row=3, columnspan=2, padx=10, pady=10)
+
+        # Adjust spacing for input bar labels
+        view_bank_window.grid_rowconfigure(4, minsize=20)

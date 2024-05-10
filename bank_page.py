@@ -105,7 +105,6 @@ class BankGUI:
                 tree["columns"] = ("Blood Bank ID", "Name", "Location", "Contact Information", "Services Provided", "Operating Hours")
                 
                 # Column headings
-                tree.heading("#0")
                 for column in tree["columns"]:
                     tree.heading(column, text=column)
                 
@@ -151,11 +150,49 @@ class BankGUI:
         b_search_label.grid(row=2, column=0, padx=10, pady=10)
         b_search_entry = Entry(view_bank_window)
         b_search_entry.grid(row=2, column=1, padx=10, pady=10)
-        delete_button = Button(view_bank_window, text="Delete", command=lambda: delete_selected_bank())
+        delete_button = Button(view_bank_window, text="Delete", command=delete_selected_bank)
         delete_button.grid(row=3, columnspan=2, padx=10, pady=10)
+
 
         # Adjust spacing for input bar labels
         view_bank_window.grid_rowconfigure(4, minsize=20)
+
+        def view_all_records_bank():
+            blood_bank_id = blood_bank_id_entry.get()
+            bank_records = view_all_banks()
+            if bank_records:
+                # Create Treeview widget
+                tree = ttk.Treeview(view_bank_window)
+                
+                # Define columns
+                tree["columns"] = ("Blood Bank ID", "Name", "Location", "Contact Information", "Services Provided", "Operating Hours")
+                
+                # Column headings
+                for column in tree["columns"]:
+                    tree.heading(column, text=column)
+                
+                # Insert data
+                for record in bank_records:
+                    tree.insert("", "end", values=record)
+                
+                # Display Treeview
+                tree.grid(row=6, columnspan=2, padx=10, pady=10, sticky="nsew")
+                
+                # Adjust column spacing
+                for col in tree["columns"]:
+                    tree.column(col, width=120, anchor="center")  # Adjust width as needed
+                
+                # Add scrollbar
+                scrollbar = ttk.Scrollbar(view_bank_window, orient="vertical", command=tree.yview)
+                scrollbar.grid(row=6, column=2, sticky="ns")
+                tree.configure(yscrollcommand=scrollbar.set)
+            else:
+                messagebox.showinfo("No Records", "No records found for Blood Bank ID: " + blood_bank_id)
+
+        view_all_button = Button(view_bank_window, text="View All Banks", command=view_all_records_bank)
+        view_all_button.grid(row=4, columnspan=2, padx=10, pady=10)
+
+        
 
 def open_bank_gui():
     root = Tk()

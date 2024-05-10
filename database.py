@@ -2,6 +2,7 @@ import psycopg2
 import firebase_admin
 from firebase_admin import credentials, firestore
 from firebase_admin import db as firebase_db
+from datetime import timedelta
 
 
 # Initialize Firebase with your credentials file
@@ -251,17 +252,23 @@ def insert_donation_firebase(donor_id, blood_bank_id, quantity_donated, blood_ty
     except Exception as e:
         print("Error inserting Blood Bank data:", e)
 
-def update_blood_inventory_firebase(donor_id, blood_bank_id, quantity_donated, blood_type):
-    ref = db.child('blood_inventory')  # Reference to the 'blood_inventory' node in your Firebase database
-    new_inventory_ref = ref.push()
-    new_inventory_ref.set({
-        'donor_id': donor_id,
-        'blood_bank_id': blood_bank_id,
-        'quantity_donated': quantity_donated,
-        'blood_type': blood_type,
-        'expiry_date': "Calculate expiry date",  # You need to calculate this based on the donation date
-        'last_updated': firebase_admin.db.ServerValue.TIMESTAMP
-    })
+def update_blood_inventory_firebase(donor_id, blood_bank_id, quantity_donated, blood_type, donation_date):
+    try:
+        # Calculate expiry date (30 days from donation date)
+        expiry_date = donation_date + timedelta(days=30)
+
+        collection_ref = db.collection('blood_inventory')  # Reference to the 'blood_inventory' collection in your Firebase database
+        new_doc_ref = collection_ref.add({
+            'blood_bank_id': blood_bank_id,
+            'blood_type': blood_type,
+            'quantity_donated': quantity_donated,
+            'donation_date': donation_date,
+            'expiry_date': expiry_date,
+            'donor_id': donor_id,
+        })
+        print("Blood inventory Updated successfully")
+    except Exception as e:
+        print("Error updating Blood inventory data:", e)
 
 
 def insert_blood_inventory(inventory_id, blood_bank_id, donor_id):

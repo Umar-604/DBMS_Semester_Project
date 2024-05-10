@@ -1,4 +1,15 @@
 import psycopg2
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
+
+
+# Initialize Firebase with your credentials file
+def initialize_firebase():
+    cred = credentials.Certificate("serviceAccountKey.json")  # Path to your service account key JSON file
+    firebase_admin.initialize_app(cred)
+    db_firestore = firestore.client()
+
 
 # Function to establish a connection to the database
 def get_db_connection():
@@ -13,39 +24,66 @@ def get_db_connection():
         print("Unable to connect to the database:", e)
         return None
 
-# Function to insert donor data into the database
+# Function to insert donor data into the PostgreSQL database and Firebase Realtime Database
 def insert_donor(donor_id, name, contact, blood_type, date_of_birth, gender, health_history, last_donation_date):
-
-    db=get_db_connection()
+    db = get_db_connection()
     if db:
         try:
-            cursor =db.cursor()
-            insert_query="""INSERT INTO donors(donor_id, name, contact, blood_type, date_of_birth, gender, health_history, last_donation_date)
+            cursor = db.cursor()
+            insert_query = """INSERT INTO donors(donor_id, name, contact, blood_type, date_of_birth, gender, health_history, last_donation_date)
                               VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"""
-            cursor.execute(insert_query, (donor_id, name, contact, blood_type, date_of_birth, gender, health_history, last_donation_date))
+            cursor.execute(insert_query, (
+            donor_id, name, contact, blood_type, date_of_birth, gender, health_history, last_donation_date))
             db.commit()
-            print("Donor's data inserted successfully!")
+            print("Donor's data inserted successfully into PostgreSQL!")
+
+            # Insert data into Firebase
+            insert_donor_firebase(donor_id, name, contact, blood_type, date_of_birth, gender, health_history,
+                                  last_donation_date)
         except psycopg2.Error as e:
-            print("Error inserting donor data:", e)
+            print("Error inserting donor data into PostgreSQL:", e)
             db.rollback()
         finally:
             # Close the cursor and database connection
             cursor.close()
             db.close()
 
+
+# Function to insert donor data into Firebase Realtime Database
+def insert_donor_firebase(donor_id, name, contact, blood_type, date_of_birth, gender, health_history,
+                          last_donation_date):
+    ref = db.reference('donors')  # Reference to the 'donors' node in your Firebase database
+    ref.child(donor_id).set({
+        'name': name,
+        'contact': contact,
+        'blood_type': blood_type,
+        'date_of_birth': date_of_birth,
+        'gender': gender,
+        'health_history': health_history,
+        'last_donation_date': last_donation_date
+    })
+
+
 # Function to recieve donor data into the database
-def insert_receiver(recipent_id, name, contact, blood_type, date_of_birth, gender, health_condition, hospital):
-    db=get_db_connection()
+def insert_receiver(recipient_id, name, contact, blood_type, date_of_birth, gender, health_condition, hospital):
+    # Insert into PostgreSQL
+    db = get_db_connection()
     if db:
         try:
-            cursor =db.cursor()
-            insert_query="""INSERT INTO recipients(recipient_id, name, contact, blood_type, date_of_birth, gender, health_condition, hospital)
+            cursor = db.cursor()
+            insert_query = """INSERT INTO recipients(recipient_id, name, contact, blood_type, date_of_birth, gender, health_condition, hospital)
                               VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"""
-            cursor.execute(insert_query, (recipent_id, name, contact, blood_type, date_of_birth, gender, health_condition, hospital))
+            cursor.execute(insert_query,
+                           (recipient_id, name, contact, blood_type, date_of_birth, gender, health_condition, hospital))
             db.commit()
-            print("Receiver's data inserted successfully!")
+            print("Receiver's data inserted successfully into PostgreSQL!")
+
+            # Insert data into Firebase
+            insert_receiver_firebase(recipient_id, name, contact, blood_type, date_of_birth, gender, health_condition,
+                                     hospital)
+
         except psycopg2.Error as e:
-            print("Error inserting recipient data:", e)
+            print("Error inserting recipient data into PostgreSQL:", e)
             db.rollback()
         finally:
             # Close the cursor and database connection

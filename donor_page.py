@@ -45,6 +45,7 @@ class DonorGUI:
             last_donation_date = last_donation_date_entry.get()
 
             insert_donor(donor_id, name, contact, blood_type, dob, gender, health_history, last_donation_date)
+            insert_donor_firebase(donor_id, name, contact, blood_type, dob, gender, health_history, last_donation_date)
             messagebox.showinfo("Donor Information", f"Donor ID: {donor_id}\nName: {name}\nContact: {contact}\nBlood Type: {blood_type}\nDate of Birth: {dob}\nGender: {gender}\nHealth History: {health_history}\nLast Donation Date: {last_donation_date}")
 
         # Donor ID

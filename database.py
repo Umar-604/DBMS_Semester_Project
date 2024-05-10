@@ -91,6 +91,7 @@ def insert_receiver(recipient_id, name, contact, blood_type, date_of_birth, gend
             db.close()
 
 def insert_blood_bank(blood_bank_id, name, location, contact, services_provided, operating_hours):
+    # Insert into PostgreSQL
     db = get_db_connection()
     if db:
         try:
@@ -99,14 +100,29 @@ def insert_blood_bank(blood_bank_id, name, location, contact, services_provided,
                               VALUES(%s, %s, %s, %s, %s, %s)"""
             cursor.execute(insert_query, (blood_bank_id, name, location, contact, services_provided, operating_hours))
             db.commit()
-            print("Blood bank inserted successfully!")
+            print("Blood bank inserted successfully into PostgreSQL!")
+            
+            # Insert data into Firebase
+            insert_blood_bank_firebase(blood_bank_id, name, location, contact, services_provided, operating_hours)
+            
         except psycopg2.Error as e:
-            print("Error inserting data:", e)
+            print("Error inserting data into PostgreSQL:", e)
             db.rollback()
         finally:
             # Close the cursor and database connection
             cursor.close()
             db.close()
+
+def insert_blood_bank_firebase(blood_bank_id, name, location, contact, services_provided, operating_hours):
+    ref = db.reference('blood_banks')  # Reference to the 'blood_banks' node in your Firebase database
+    ref.child(blood_bank_id).set({
+        'name': name,
+        'location': location,
+        'contact': contact,
+        'services_provided': services_provided,
+        'operating_hours': operating_hours
+    })
+
 
 
 def insert_donations(donor_id, blood_bank_id, quantity_donated, blood_type, health_check_information):

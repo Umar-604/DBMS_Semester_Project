@@ -97,17 +97,23 @@ def insert_receiver(recipient_id, name, contact, blood_type, date_of_birth, gend
             cursor.close()
             db.close()
 
-def insert_receiver_firebase(recipient_id, name, contact, blood_type, date_of_birth, gender, health_condition, hospital):
-    ref = db.reference('recipients')  # Reference to the 'recipients' node in your Firebase database
-    ref.child(recipient_id).set({
-        'name': name,
-        'contact': contact,
-        'blood_type': blood_type,
-        'date_of_birth': date_of_birth,
-        'gender': gender,
-        'health_condition': health_condition,
-        'hospital': hospital
-    })
+def insert_receiver_firebase(recipient_id, name, contact, blood_type, date_of_birth, gender, health_condition,
+                          hospital):
+    try:
+        collection_ref = db.collection('receivers')  # Reference to the 'donors' node in your Firebase database
+        new_doc_ref = collection_ref.add({
+            'name': name,
+            'contact': contact,
+            'blood_type': blood_type,
+            'date_of_birth': date_of_birth,
+            'gender': gender,
+            'health_condition': health_condition,
+            'hospital': hospital
+        })
+        print("Receiver's data inserted successfully with ID:", new_doc_ref.id)
+    except Exception as e:
+        print("Error inserting receiver data:", e)
+
 
 
 def insert_blood_bank(blood_bank_id, name, location, contact, services_provided, operating_hours):

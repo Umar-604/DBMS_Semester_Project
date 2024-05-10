@@ -142,16 +142,21 @@ def insert_blood_bank(blood_bank_id, name, location, contact, services_provided,
             db.close()
 
 def insert_blood_bank_firebase(blood_bank_id, name, location, contact, services_provided, operating_hours):
-    ref = db.reference('blood_banks')  # Reference to the 'blood_banks' node in your Firebase database
-    ref.child(blood_bank_id).set({
+    try:
+        collection_ref = db.collection('blood_banks')  # Reference to the 'donors' node in your Firebase database
+        new_doc_ref = collection_ref.add({
+
+        'blood_bank_id': blood_bank_id,
         'name': name,
         'location': location,
         'contact': contact,
         'services_provided': services_provided,
         'operating_hours': operating_hours
-    })
 
-
+        })
+        print("Blood Bank data inserted successfully with ID:", blood_bank_id)
+    except Exception as e:
+        print("Error inserting Blood Bank data:", e)
 
 def insert_donations(donor_id, blood_bank_id, quantity_donated, blood_type, health_check_information):
     db = get_db_connection()

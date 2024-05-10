@@ -6,6 +6,8 @@ from donation_page import *
 from database import *
 from donor_page import open_donor_gui
 from receiver_page import open_receiver_gui
+from inventory import open_inventory
+from bank_page import open_bank_gui
 
 
 def on_button_click():
@@ -16,6 +18,12 @@ def donor_button_click():
 
 def receiver_button_click():
     open_receiver_gui()
+
+def inventory_button_click():
+    open_inventory()
+
+def bank_button_click():
+    open_bank_gui()
 
 root = Tk()
 root.title("Donation Page")
@@ -66,8 +74,11 @@ button2.pack(pady=10)
 button3 = Button(option_frame, text="Make a Donation", command=lambda: on_button_click())
 button3.pack(pady=10)
 
-button4 = Button(option_frame, text="Blood Bank", command=lambda: on_button_click())
+button4 = Button(option_frame, text="Blood Bank", command=lambda: bank_button_click())
 button4.pack(pady=10)
+
+button5 = Button(option_frame, text="Blood Inventory", command=lambda: inventory_button_click())
+button5.pack(pady=10)
 
 # List of blood types and genders
 blood_types = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]

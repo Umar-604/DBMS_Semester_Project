@@ -169,8 +169,6 @@ def insert_donations(donor_id, blood_bank_id, quantity_donated, blood_type, heal
             cursor.execute(trigger_query_before)
             db.commit()
 
-            
-
             trigger_query_after1 = """
                 CREATE OR REPLACE FUNCTION update_inventory()
                 RETURNS TRIGGER AS $$
@@ -210,6 +208,35 @@ def insert_donations(donor_id, blood_bank_id, quantity_donated, blood_type, heal
             # Close the cursor and database connection
             cursor.close()
             db.close()
+
+            # Insert data into Firebase
+            insert_donation_firebase(donor_id, blood_bank_id, quantity_donated, blood_type, health_check_information)
+            update_blood_inventory_firebase(donor_id, blood_bank_id, quantity_donated, blood_type)
+
+def insert_donation_firebase(donor_id, blood_bank_id, quantity_donated, blood_type, health_check_information):
+    ref = db.child('donations')  # Reference to the 'donations' node in your Firebase database
+    new_donation_ref = ref.push()
+    new_donation_ref.set({
+        'donor_id': donor_id,
+        'blood_bank_id': blood_bank_id,
+        'quantity_donated': quantity_donated,
+        'blood_type': blood_type,
+        'health_check_information': health_check_information,
+        'donation_date': firebase_admin.db.ServerValue.TIMESTAMP
+    })
+
+def update_blood_inventory_firebase(donor_id, blood_bank_id, quantity_donated, blood_type):
+    ref = db.child('blood_inventory')  # Reference to the 'blood_inventory' node in your Firebase database
+    new_inventory_ref = ref.push()
+    new_inventory_ref.set({
+        'donor_id': donor_id,
+        'blood_bank_id': blood_bank_id,
+        'quantity_donated': quantity_donated,
+        'blood_type': blood_type,
+        'expiry_date': "Calculate expiry date",  # You need to calculate this based on the donation date
+        'last_updated': firebase_admin.db.ServerValue.TIMESTAMP
+    })
+
 
 def insert_blood_inventory(inventory_id, blood_bank_id, donor_id):
     # Connect to PostgreSQL

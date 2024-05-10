@@ -235,16 +235,21 @@ def insert_donations(donor_id, blood_bank_id, quantity_donated, blood_type, heal
             update_blood_inventory_firebase(donor_id, blood_bank_id, quantity_donated, blood_type)
 
 def insert_donation_firebase(donor_id, blood_bank_id, quantity_donated, blood_type, health_check_information):
-    ref = db.child('donations')  # Reference to the 'donations' node in your Firebase database
-    new_donation_ref = ref.push()
-    new_donation_ref.set({
+    try:
+        collection_ref = db.collection('Donations')  # Reference to the 'donors' node in your Firebase database
+        new_doc_ref = collection_ref.add({
+
         'donor_id': donor_id,
         'blood_bank_id': blood_bank_id,
         'quantity_donated': quantity_donated,
         'blood_type': blood_type,
         'health_check_information': health_check_information,
         'donation_date': firebase_admin.db.ServerValue.TIMESTAMP
-    })
+
+        })
+        print("Donation data inserted successfully")
+    except Exception as e:
+        print("Error inserting Blood Bank data:", e)
 
 def update_blood_inventory_firebase(donor_id, blood_bank_id, quantity_donated, blood_type):
     ref = db.child('blood_inventory')  # Reference to the 'blood_inventory' node in your Firebase database

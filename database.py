@@ -157,32 +157,7 @@ def insert_donations(donor_id, blood_bank_id, quantity_donated, blood_type, heal
             cursor.execute(trigger_query_before)
             db.commit()
 
-            # trigger_query_after = """
-            #     CREATE OR REPLACE FUNCTION after_insert_donations_trigger()
-            #     RETURNS TRIGGER AS $$
-            #     BEGIN
-            #         -- Update blood inventory to reflect the new donation
-            #         UPDATE blood_inventory
-
-            #         -- Check if the quantity of a particular blood type falls below a certain threshold
-            #         IF (SELECT quantity_available FROM blood_inventory WHERE blood_bank_id = NEW.blood_bank_id AND blood_type = NEW.blood_type) < 200 THEN
-            #             -- Notify blood bank administrator (Replace 'notify_administrator()' with your notification logic)
-            #             PERFORM notify_administrator('Blood inventory for blood type ' || NEW.blood_type || ' fell below threshold at blood bank ' || NEW.blood_bank_id);
-            #         END IF;
-
-            #         RETURN NEW;
-            #     END;
-            #     $$ LANGUAGE plpgsql;
-
-            #     -- Create the trigger
-            #     CREATE OR REPLACE TRIGGER donations_after_insert_trigger
-            #     AFTER INSERT ON donations
-            #     FOR EACH ROW
-            #     EXECUTE FUNCTION after_insert_donations_trigger();
-            #     """
             
-            # cursor.execute(trigger_query_after)
-            # db.commit()
 
             trigger_query_after1 = """
                 CREATE OR REPLACE FUNCTION update_inventory()
@@ -225,11 +200,13 @@ def insert_donations(donor_id, blood_bank_id, quantity_donated, blood_type, heal
             db.close()
 
 def insert_blood_inventory(inventory_id, blood_bank_id, donor_id):
+    # Connect to PostgreSQL
     db = get_db_connection()
     if db:
         try:
             cursor = db.cursor()
 
+            # Create trigger for checking blood quantity threshold
             trigger_query = """
                 CREATE OR REPLACE FUNCTION blood_threshold()
                 RETURNS TRIGGER AS $$
@@ -238,7 +215,6 @@ def insert_blood_inventory(inventory_id, blood_bank_id, donor_id):
                 BEGIN
                     -- if the quantity of any blood type falls below the threshold
                     IF NEW.quantity_available < blood_type_threshold THEN
-                       
                         RAISE NOTICE 'Alert: Quantity of blood type % is below threshold', NEW.blood_type;
                     END IF;
 
@@ -253,18 +229,35 @@ def insert_blood_inventory(inventory_id, blood_bank_id, donor_id):
             """
             cursor.execute(trigger_query)
             db.commit()
+
+            # Insert data into the blood_inventory table
             insert_query = """INSERT INTO blood_inventory(inventory_id, blood_bank_id, donor_id)
                               VALUES(%s, %s, %s)"""
             cursor.execute(insert_query, (inventory_id, blood_bank_id, donor_id))
             db.commit()
-            print("Data inserted successfully!")
+            print("Data inserted successfully into PostgreSQL!")
+
+            # Close the cursor and database connection
+            cursor.close()
+            db.close()
+
+            # Insert data into Firebase
+            cred = credentials.Certificate("path/to/serviceAccountKey.json")
+            firebase_admin.initialize_app(cred)
+            ref = firebase_db.reference('blood_inventory')  # Reference to the 'blood_inventory' node in Firebase
+            ref.child(inventory_id).set({
+                'blood_bank_id': blood_bank_id,
+                'donor_id': donor_id
+            })
+            print("Data inserted successfully into Firebase!")
+
         except psycopg2.Error as e:
             print("Error inserting data:", e)
             db.rollback()
         finally:
-            # Close the cursor and database connection
-            cursor.close()
-            db.close()
+            if db:
+                # Close the database connection
+                db.close()
 
 def before_insert_blood_inventory():
     try:

@@ -388,6 +388,18 @@ def delete_receiver(recipient_id):
     finally:
         cursor.close()
         db.close()
+
+def delete_bank(blood_bank_id):
+    db = get_db_connection()
+    cursor = db.cursor()
+    try:
+        cursor.execute("DELETE FROM blood_banks WHERE blood_bank_id = %s", (blood_bank_id,))
+        db.commit()  # Don't forget to commit the transaction
+    except Exception as e:
+        print("Error deleting bank:", e)
+    finally:
+        cursor.close()
+        db.close()
         
 def view_table_data(table_name):
     db = get_db_connection()

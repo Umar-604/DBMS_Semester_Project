@@ -233,7 +233,7 @@ def insert_donations(donor_id, blood_bank_id, quantity_donated, blood_type, heal
 
             # Insert data into Firebase
             insert_donation_firebase(donor_id, blood_bank_id, quantity_donated, blood_type, health_check_information)
-            update_blood_inventory_firebase(donor_id, blood_bank_id, quantity_donated, blood_type)
+            update_blood_inventory_firebase(blood_bank_id, quantity_donated, blood_type, donor_id)
 
 def insert_donation_firebase(donor_id, blood_bank_id, quantity_donated, blood_type, health_check_information):
     try:
@@ -244,26 +244,22 @@ def insert_donation_firebase(donor_id, blood_bank_id, quantity_donated, blood_ty
         'blood_bank_id': blood_bank_id,
         'quantity_donated': quantity_donated,
         'blood_type': blood_type,
-        'health_check_information': health_check_information,
-        'donation_date': firebase_admin.db.ServerValue.TIMESTAMP
+        'health_check_information': health_check_information
 
         })
         print("Donation data inserted successfully")
     except Exception as e:
         print("Error inserting Blood Bank data:", e)
 
-def update_blood_inventory_firebase(donor_id, blood_bank_id, quantity_donated, blood_type, donation_date):
+def update_blood_inventory_firebase(blood_bank_id, quantity_donated, blood_type, donor_id):
     try:
         # Calculate expiry date (30 days from donation date)
-        expiry_date = donation_date + timedelta(days=30)
 
         collection_ref = db.collection('blood_inventory')  # Reference to the 'blood_inventory' collection in your Firebase database
         new_doc_ref = collection_ref.add({
             'blood_bank_id': blood_bank_id,
             'blood_type': blood_type,
             'quantity_donated': quantity_donated,
-            'donation_date': donation_date,
-            'expiry_date': expiry_date,
             'donor_id': donor_id,
         })
         print("Blood inventory Updated successfully")

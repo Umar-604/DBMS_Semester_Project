@@ -329,6 +329,24 @@ def view_all_inventory():
         db.close()
         return inventory_records
     
+def view_all_banks():
+    db = get_db_connection()
+    cursor = db.cursor()
+    try:
+        cursor.execute("SELECT * FROM blood_banks")
+        bank_records = cursor.fetchall()
+        if bank_records:
+            for record in bank_records:
+                print(record)  # Or process the records as needed
+        else:
+            print("No records found:")
+    except psycopg2.Error as e:
+        print("Error viewing Bank records:", e)
+    finally:
+        cursor.close()
+        db.close()
+        return bank_records
+    
 def view_inventory(blood_type):
     db = get_db_connection()
     cursor = db.cursor()

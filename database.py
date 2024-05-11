@@ -387,7 +387,37 @@ def view_donation(donor_id):
         cursor.close()
         db.close()
         return donation_records
-    
+
+def view_donation_in_firebase(donor_id):
+    try:
+        # Convert donor ID integer to string
+        donor_id_str = str(donor_id)
+
+        # Get the document ID from Firestore
+        document_id = get_document_id('Donations', 'donor_id', donor_id_str)
+        
+        if document_id:
+            # Initialize Firestore client
+            db = firestore.client()
+
+            # Query Firestore for donation records using the retrieved document ID
+            donation_ref = db.collection('Donations').document(document_id)
+            donation_data = donation_ref.get().to_dict()
+
+            if donation_data:
+                # Convert values to strings
+                for key in donation_data:
+                    donation_data[key] = str(donation_data[key])
+
+                return [donation_data]  # Return data as a list of dictionaries
+            else:
+                return []  # Return an empty list if no records found
+        else:
+            return []  # Return an empty list if no document ID found for the given donor ID
+
+    except Exception as e:
+        print("Error viewing donation records from Firebase:", e)
+
 def view_receiver(recipient_id):
     db = get_db_connection()
     cursor = db.cursor()

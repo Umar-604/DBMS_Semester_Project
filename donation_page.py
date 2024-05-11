@@ -65,15 +65,83 @@ class DonationGUI:
 
     def search_donation_info(self):
         donor_id = self.search_entry.get()
-        if donor_id:
-            donation_records = view_donation(donor_id)
-            if donation_records:
-                records_text = "\n".join([", ".join(map(str, record)) for record in donation_records])
-                self.donation_records_label.config(text="Donation Records:\n" + records_text)
-            else:
-                self.donation_records_label.config(text="No records found for donor ID: " + donor_id)
+
+        # Search donation records in PostgreSQL
+        donation_records_postgres = view_donation(donor_id)
+
+        # Search donation records in Firebase
+        donation_records_firebase = view_donation_in_firebase(donor_id)
+
+        if not donor_id:
+            messagebox.showinfo("Error", "Please enter a donor ID to search for donation records.")
+            return
+
+        if not donation_records_postgres and not donation_records_firebase:
+            messagebox.showinfo("No Records", "No records found for donor ID: " + donor_id)
+            return
+
+        # Clear any existing labels or treeviews
+        for widget in self.input_frame.winfo_children():
+            widget.destroy()
+
+        # Display PostgreSQL data
+        if donation_records_postgres:
+            postgres_label = ttk.Label(self.input_frame, text="PostgreSQL Data")
+            postgres_label.pack(pady=5)
+
+            tree_postgres = ttk.Treeview(self.input_frame)
+            tree_postgres["columns"] = ("Donor ID", "Blood Bank ID", "Quantity Donated", "Blood Type", "Health Check Information", "Donation ID")
+
+            for col in tree_postgres["columns"]:
+                tree_postgres.heading(col, text=col)
+
+            for record in donation_records_postgres:
+                tree_postgres.insert("", "end", values=record)
+
+            tree_postgres.pack(padx=10, pady=10, fill="both", expand=True)
+
+            # Adjust column spacing
+            for col in tree_postgres["columns"]:
+                tree_postgres.column(col, width=120, anchor="center")  # Adjust width as needed
+
+            # Add scrollbar
+            scrollbar_postgres = ttk.Scrollbar(self.input_frame, orient="vertical", command=tree_postgres.yview)
+            scrollbar_postgres.pack(side="right", fill="y")
+            tree_postgres.configure(yscrollcommand=scrollbar_postgres.set)
         else:
-            self.donation_records_label.config(text="Please enter a donor ID to search for donation records.")
+            messagebox.showinfo("No Records", "No records found for donor ID: " + donor_id)
+
+        # Display Firebase data
+        if donation_records_firebase:
+            firebase_label = ttk.Label(self.input_frame, text="Firebase Data")
+            firebase_label.pack(pady=5)
+
+            tree_firebase = ttk.Treeview(self.input_frame)
+            tree_firebase["columns"] = tuple(donation_records_firebase[0].keys())
+
+            for col in tree_firebase["columns"]:
+                tree_firebase.heading(col, text=col)
+
+            for record in donation_records_firebase:
+                values = [str(record[key]) for key in record]
+                tree_firebase.insert("", "end", values=values)
+
+            tree_firebase.pack(padx=10, pady=10, fill="both", expand=True)
+
+            # Adjust column spacing
+            for col in tree_firebase["columns"]:
+                tree_firebase.column(col, width=120, anchor="center")  # Adjust width as needed
+
+            # Add scrollbar
+            scrollbar_firebase = ttk.Scrollbar(self.input_frame, orient="vertical", command=tree_firebase.yview)
+            scrollbar_firebase.pack(side="right", fill="y")
+            tree_firebase.configure(yscrollcommand=scrollbar_firebase.set)
+        else:
+            messagebox.showinfo("No Records", "No records found for donor ID in Firebase: " + donor_id)
+
+
+
+
 
     def submit_donation_info(self):
         donor_id = self.donor_id_entry.get()

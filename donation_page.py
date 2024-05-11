@@ -90,7 +90,7 @@ class DonationGUI:
             postgres_label.pack(pady=5)
 
             tree_postgres = ttk.Treeview(self.input_frame)
-            tree_postgres["columns"] = ("Donor ID", "Blood Bank ID", "Quantity Donated", "Blood Type", "Health Check Information", "Donation ID")
+            tree_postgres["columns"] = ("Donor ID", "Blood Bank ID", "Quantity Donated (ml)", "Blood Type", "Health Check Information", "Donation ID")
 
             for col in tree_postgres["columns"]:
                 tree_postgres.heading(col, text=col)
@@ -102,7 +102,7 @@ class DonationGUI:
 
             # Adjust column spacing
             for col in tree_postgres["columns"]:
-                tree_postgres.column(col, width=120, anchor="center")  # Adjust width as needed
+                tree_postgres.column(col, width=140, anchor="center")  # Adjust width as needed
 
             # Add scrollbar
             scrollbar_postgres = ttk.Scrollbar(self.input_frame, orient="vertical", command=tree_postgres.yview)
@@ -138,9 +138,6 @@ class DonationGUI:
             tree_firebase.configure(yscrollcommand=scrollbar_firebase.set)
         else:
             messagebox.showinfo("No Records", "No records found for donor ID in Firebase: " + donor_id)
-
-
-
 
 
     def submit_donation_info(self):

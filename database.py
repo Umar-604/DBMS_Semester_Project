@@ -550,6 +550,36 @@ def view_donor_firebase(donor_id):
     except Exception as e:
         print("Error viewing donor records:", e)
 
+def view_receiver_firebase(recipient_id):
+    try:
+        # Convert donor ID integer to string
+        recipient_id_str = str(recipient_id)
+
+        # Get the document ID from Firestore
+        document_id = get_document_id('receivers', 'recipient_id', recipient_id)
+        
+        if document_id:
+            # Initialize Firestore client
+            db = firestore.client()
+
+            # Query Firestore for donor records using the retrieved document ID
+            receiver_ref = db.collection('receivers').document(document_id)
+            receiver_data = receiver_ref.get().to_dict()
+
+            if receiver_data:
+                # Convert values to strings
+                for key in receiver_data:
+                    receiver_data[key] = str(receiver_data[key])
+
+                return [receiver_data]  # Return data as a list of dictionaries
+            else:
+                return []  # Return an empty list if no records found
+        else:
+            return []  # Return an empty list if no document ID found for the given donor ID
+
+    except Exception as e:
+        print("Error viewing receiver records:", e)
+
 def delete_donor(donor_id):
     db = get_db_connection()
     cursor = db.cursor()

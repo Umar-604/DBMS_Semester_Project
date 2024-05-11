@@ -114,36 +114,76 @@ class DonorGUI:
         def submit_donor_id():
             donor_id = donor_id_entry.get()
             donor_records = view_donor(donor_id)
+            donor_records_firebase = view_donor_firebase(donor_id)
+
             if donor_records:
-                # Create Treeview widget
-                tree = ttk.Treeview(existing_donor_window)
-                
+                # Add label for PostgreSQL table
+                postgres_label = ttk.Label(existing_donor_window, text="PostgreSQL Data")
+                postgres_label.grid(row=5, column=0, columnspan=2, padx=10, pady=5)
+
+                # Create Treeview widget for PostgreSQL data
+                tree_postgres = ttk.Treeview(existing_donor_window)
+
                 # Define columns
-                tree["columns"] = ("Donor ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health History", "Last Donation Date")
-                
+                tree_postgres["columns"] = ("Donor ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health History", "Last Donation Date")
+
                 # Column headings
-                tree.heading("#0")
-                for column in tree["columns"]:
-                    tree.heading(column, text=column)
-                
+                for column in tree_postgres["columns"]:
+                    tree_postgres.heading(column, text=column)
+
                 # Insert data
                 for record in donor_records:
-                    tree.insert("", "end", values=record)
-                
+                    tree_postgres.insert("", "end", values=record)
+
                 # Display Treeview
-                tree.grid(row=6, columnspan=2, padx=10, pady=10, sticky="nsew")
-                
+                tree_postgres.grid(row=6, columnspan=2, padx=10, pady=10, sticky="nsew")
+
                 # Adjust column spacing
-                for col in tree["columns"]:
-                    tree.column(col, width=120, anchor="center")  # Adjust width as needed
-                
+                for col in tree_postgres["columns"]:
+                    tree_postgres.column(col, width=120, anchor="center")  # Adjust width as needed
+
                 # Add scrollbar
-                scrollbar = ttk.Scrollbar(existing_donor_window, orient="vertical", command=tree.yview)
-                scrollbar.grid(row=6, column=2, sticky="ns")
-                tree.configure(yscrollcommand=scrollbar.set)
+                scrollbar_postgres = ttk.Scrollbar(existing_donor_window, orient="vertical", command=tree_postgres.yview)
+                scrollbar_postgres.grid(row=6, column=2, sticky="ns")
+                tree_postgres.configure(yscrollcommand=scrollbar_postgres.set)
             else:
                 messagebox.showinfo("No Records", "No records found for donor ID: " + donor_id)
 
+            if donor_records_firebase:
+                # Add label for Firebase table
+                firebase_label = ttk.Label(existing_donor_window, text="Firebase Data")
+                firebase_label.grid(row=7, column=0, columnspan=2, padx=10, pady=5)
+
+                # Create Treeview widget for Firebase data
+                tree_firebase = ttk.Treeview(existing_donor_window)
+
+                # Define columns
+                tree_firebase["columns"] = tuple(donor_records_firebase[0].keys())
+
+                # Column headings
+                for column in tree_firebase["columns"]:
+                    tree_firebase.heading(column, text=column)
+
+                # Insert data
+                for record in donor_records_firebase:
+                    values = [str(record[key]) for key in record]
+                    tree_firebase.insert("", "end", values=values)
+
+                # Display Treeview
+                tree_firebase.grid(row=8, columnspan=2, padx=10, pady=10, sticky="nsew")
+
+                # Adjust column spacing
+                for col in tree_firebase["columns"]:
+                    tree_firebase.column(col, width=120, anchor="center")  # Adjust width as needed
+
+                # Add scrollbar
+                scrollbar_firebase = ttk.Scrollbar(existing_donor_window, orient="vertical", command=tree_firebase.yview)
+                scrollbar_firebase.grid(row=8, column=2, sticky="ns")
+                tree_firebase.configure(yscrollcommand=scrollbar_firebase.set)
+            else:
+                messagebox.showinfo("No Records", "No records found for donor ID in Firebase: " + donor_id)
+
+# Example usage:
         def delete_selected_donor():
             donor_id = d_search_entry.get()  # Get the donor ID from the entry
             donor_records = view_donor(donor_id)
@@ -155,7 +195,7 @@ class DonorGUI:
                 messagebox.showinfo("No Records", "No records found for donor ID: " + donor_id)
 
         # Donor ID
-        donor_id_label = Label(existing_donor_window, text="Donor ID:")
+        donor_id_label = Label(existing_donor_window, text="Donor ID to view:")
         donor_id_label.grid(row=0, column=0, padx=10, pady=10)
         donor_id_entry = Entry(existing_donor_window)
         donor_id_entry.grid(row=0, column=1, padx=10, pady=10)
@@ -164,7 +204,7 @@ class DonorGUI:
         submit_button = Button(existing_donor_window, text="Submit", command=submit_donor_id)
         submit_button.grid(row=1, columnspan=2, padx=10, pady=10)
 
-        d_search_label = Label(existing_donor_window, text="Enter Donor ID:")
+        d_search_label = Label(existing_donor_window, text="Enter Donor ID to delete:")
         d_search_label.grid(row=2, column=0, padx=10, pady=10)
         d_search_entry = Entry(existing_donor_window)
         d_search_entry.grid(row=2, column=1, padx=10, pady=10)

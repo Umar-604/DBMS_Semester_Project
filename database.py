@@ -484,8 +484,9 @@ def view_inventory(blood_type):
 def view_donor(donor_id):
     db = get_db_connection()
     cursor = db.cursor()
+    donor_records = []  # Initialize the variable with an empty list
     try:
-        cursor.execute("SELECT * FROM donors WHERE donor_id = %s", (donor_id))
+        cursor.execute("SELECT * FROM donors WHERE donor_id = %s", (donor_id,))
         donor_records = cursor.fetchall()
         if donor_records:
             for record in donor_records:
@@ -498,6 +499,56 @@ def view_donor(donor_id):
         cursor.close()
         db.close()
         return donor_records
+
+    
+def get_document_id(collection_name, field, value):
+    try:
+        # Initialize Firestore client
+        db = firestore.client()
+
+        # Query Firestore for documents that match the specified field and value
+        query = db.collection(collection_name).where(field, '==', value).limit(1)
+        results = query.get()
+
+        # Check if any documents were found
+        for doc in results:
+            return doc.id  # Return the document ID
+
+        # If no document is found, return None
+        return None
+
+    except Exception as e:
+        print("Error retrieving document ID:", e)
+
+def view_donor_firebase(donor_id):
+    try:
+        # Convert donor ID integer to string
+        donor_id_str = str(donor_id)
+
+        # Get the document ID from Firestore
+        document_id = get_document_id('donors', 'donor_id', donor_id_str)
+        
+        if document_id:
+            # Initialize Firestore client
+            db = firestore.client()
+
+            # Query Firestore for donor records using the retrieved document ID
+            donor_ref = db.collection('donors').document(document_id)
+            donor_data = donor_ref.get().to_dict()
+
+            if donor_data:
+                # Convert values to strings
+                for key in donor_data:
+                    donor_data[key] = str(donor_data[key])
+
+                return [donor_data]  # Return data as a list of dictionaries
+            else:
+                return []  # Return an empty list if no records found
+        else:
+            return []  # Return an empty list if no document ID found for the given donor ID
+
+    except Exception as e:
+        print("Error viewing donor records:", e)
 
 def delete_donor(donor_id):
     db = get_db_connection()

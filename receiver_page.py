@@ -148,7 +148,7 @@ class ReceiverGUI:
                 scrollbar_postgres.grid(row=6, column=2, sticky="ns")
                 tree_postgres.configure(yscrollcommand=scrollbar_postgres.set)
             else:
-                messagebox.showinfo("No Records", "No records found for recipinet ID: " + recipient_id)
+                messagebox.showinfo("No Records", "No records found for recipient ID: " + recipient_id)
 
             if receiver_records_firebase:
                 # Add label for Firebase table

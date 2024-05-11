@@ -391,6 +391,7 @@ def view_donation(donor_id):
 def view_receiver(recipient_id):
     db = get_db_connection()
     cursor = db.cursor()
+    receiver_records = []
     try:
         cursor.execute("SELECT * FROM recipients WHERE recipient_id = %s", (recipient_id))
         receiver_records = cursor.fetchall()
@@ -405,6 +406,8 @@ def view_receiver(recipient_id):
         cursor.close()
         db.close()
         return receiver_records
+    
+
     
 def view_bank(blood_bank_id):
     db = get_db_connection()

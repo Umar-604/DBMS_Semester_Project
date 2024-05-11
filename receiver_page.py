@@ -6,7 +6,7 @@ from database import *
 class ReceiverGUI:
     def __init__(self, root):
         self.receiver_options_window = root
-        self.receiver_id_entry = None  # Define receiver_id_entry as a class attribute
+        receiver_id_entry = None  # Define receiver_id_entry as a class attribute
         
         # Create the receiver options window
         self.receiver_options_window.title("Receiver Options")
@@ -51,8 +51,8 @@ class ReceiverGUI:
         # Receiver ID
         receiver_id_label = Label(new_receiver_window, text="Receiver ID:")
         receiver_id_label.grid(row=0, column=0, padx=10, pady=10)
-        self.receiver_id_entry = Entry(new_receiver_window)  # Assign to class attribute
-        self.receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
+        receiver_id_entry = Entry(new_receiver_window)  # Assign to class attribute
+        receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
         # Name
         name_label = Label(new_receiver_window, text="Name:")
@@ -99,7 +99,7 @@ class ReceiverGUI:
         healthcare_facility_entry.grid(row=8, column=1, padx=10, pady=10)
 
          # Submit Button
-        submit_button = Button(new_receiver_window, text="Submit", command=lambda: submit_receiver_info(self.receiver_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_condition_entry, healthcare_facility_entry))
+        submit_button = Button(new_receiver_window, text="Submit", command=lambda: submit_receiver_info(receiver_id_entry, name_entry, contact_entry, blood_type_combobox, dob_entry, gender_combobox, health_condition_entry, healthcare_facility_entry))
         submit_button.grid(row=9, columnspan=2, padx=10, pady=10)
 
     def existing_receiver_window(self):
@@ -113,40 +113,79 @@ class ReceiverGUI:
 
         # Function to handle the submission of receiver ID
         def submit_receiver_id():
-            recipient_id = self.receiver_id_entry.get()  # Access class attribute
+            recipient_id = receiver_id_entry.get()  # Access class attribute
             receiver_records = view_receiver(recipient_id)
+            receiver_records_firebase = view_receiver_firebase(recipient_id)
 
-            if receiver_records:  # Check if data is returned
-                # Create Treeview widget
-                tree = ttk.Treeview(existing_receiver_window)
-                
+            if receiver_records:
+                # Add label for PostgreSQL table
+                postgres_label = ttk.Label(existing_receiver_window, text="PostgreSQL Data")
+                postgres_label.grid(row=5, column=0, columnspan=2, padx=10, pady=5)
+
+                # Create Treeview widget for PostgreSQL data
+                tree_postgres = ttk.Treeview(existing_receiver_window)
+
                 # Define columns
-                tree["columns"] = ("Recipient ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health Condition", "Healthcare/Hospital")
-                
+                tree_postgres["columns"] = ("Recipient ID", "Name", "Contact Information", "Blood Type", "Date of Birth", "Gender", "Health Condition", "Hospital")
+
                 # Column headings
-                for column in tree["columns"]:
-                    tree.heading(column, text=column)
-                
+                for column in tree_postgres["columns"]:
+                    tree_postgres.heading(column, text=column)
+
                 # Insert data
                 for record in receiver_records:
-                    tree.insert("", "end", values=record)
-                
+                    tree_postgres.insert("", "end", values=record)
+
                 # Display Treeview
-                tree.grid(row=6, columnspan=2, padx=10, pady=10, sticky="nsew")
-                
+                tree_postgres.grid(row=6, columnspan=2, padx=10, pady=10, sticky="nsew")
+
                 # Adjust column spacing
-                for col in tree["columns"]:
-                    tree.column(col, width=120, anchor="center")  # Adjust width as needed
-                
+                for col in tree_postgres["columns"]:
+                    tree_postgres.column(col, width=120, anchor="center")  # Adjust width as needed
+
                 # Add scrollbar
-                scrollbar = ttk.Scrollbar(existing_receiver_window, orient="vertical", command=tree.yview)
-                scrollbar.grid(row=6, column=2, sticky="ns")
-                tree.configure(yscrollcommand=scrollbar.set)
+                scrollbar_postgres = ttk.Scrollbar(existing_receiver_window, orient="vertical", command=tree_postgres.yview)
+                scrollbar_postgres.grid(row=6, column=2, sticky="ns")
+                tree_postgres.configure(yscrollcommand=scrollbar_postgres.set)
             else:
-                messagebox.showinfo("No Records", "No records found for recipient ID: " + recipient_id)
+                messagebox.showinfo("No Records", "No records found for recipinet ID: " + recipient_id)
+
+            if receiver_records_firebase:
+                # Add label for Firebase table
+                firebase_label = ttk.Label(existing_receiver_window, text="Firebase Data")
+                firebase_label.grid(row=7, column=0, columnspan=2, padx=10, pady=5)
+
+                # Create Treeview widget for Firebase data
+                tree_firebase = ttk.Treeview(existing_receiver_window)
+
+                # Define columns
+                tree_firebase["columns"] = tuple(receiver_records_firebase[0].keys())
+
+                # Column headings
+                for column in tree_firebase["columns"]:
+                    tree_firebase.heading(column, text=column)
+
+                # Insert data
+                for record in receiver_records_firebase:
+                    values = [str(record[key]) for key in record]
+                    tree_firebase.insert("", "end", values=values)
+
+                # Display Treeview
+                tree_firebase.grid(row=8, columnspan=2, padx=10, pady=10, sticky="nsew")
+
+                # Adjust column spacing
+                for col in tree_firebase["columns"]:
+                    tree_firebase.column(col, width=120, anchor="center")  # Adjust width as needed
+
+                # Add scrollbar
+                scrollbar_firebase = ttk.Scrollbar(existing_receiver_window, orient="vertical", command=tree_firebase.yview)
+                scrollbar_firebase.grid(row=8, column=2, sticky="ns")
+                tree_firebase.configure(yscrollcommand=scrollbar_firebase.set)
+            else:
+                messagebox.showinfo("No Records", "No records found for recipient ID in Firebase: " + recipient_id)
 
         def delete_selected_donor():
-            recipient_id = r_search_entry.get()  # Get the donor ID from the entry
+            recipient_id = r_search_entry.get()  # Get the recipient ID from the entry
             receiver_records = view_receiver(recipient_id)
 
             if receiver_records:
@@ -158,8 +197,8 @@ class ReceiverGUI:
         # Receiver ID
         receiver_id_label = Label(existing_receiver_window, text="Receiver ID:")
         receiver_id_label.grid(row=0, column=0, padx=10, pady=10)
-        self.receiver_id_entry = Entry(existing_receiver_window)  # Assign to class attribute
-        self.receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
+        receiver_id_entry = Entry(existing_receiver_window)  # Assign to class attribute
+        receiver_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
         # Submit Button
         submit_button = Button(existing_receiver_window, text="Submit", command=submit_receiver_id)

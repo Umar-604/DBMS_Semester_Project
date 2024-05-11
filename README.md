@@ -83,6 +83,9 @@ Welcome to the Blood Donation Database System! This project is designed to organ
 ##GUI
 ![image](https://github.com/Umar-604/DBMS_Semester_Project/blob/main/GUI.jpeg)
 
+##Semantic 
+![image](https://github.com/Umar-604/DBMS_Semester_Project/blob/main/Semantic_diagram%20.png)
+
 
 ### Conclusion
 
